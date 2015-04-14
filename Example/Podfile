@@ -2,11 +2,14 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'ZettaKit', :exclusive => true do
   pod "ZettaKit", :path => "../"
+  pod 'ReactiveCocoa', '2.4.7'
+  pod 'SocketRocket', '0.3.1-beta2'
 end
 
 target 'Tests', :exclusive => true do
   pod "ZettaKit", :path => "../"
-
+  pod 'ReactiveCocoa', '2.4.7'
+  pod 'SocketRocket', '0.3.1-beta2'
   pod 'Specta'
   pod 'Expecta'
 end
