@@ -27,6 +27,7 @@
 		F5234B3C1ADD9D2B002CEC4F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B371ADD9D2B002CEC4F /* ViewController.m */; };
 		F5234B3D1ADD9D2B002CEC4F /* SingleDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B391ADD9D2B002CEC4F /* SingleDeviceViewController.m */; };
 		F5234B3E1ADD9D2B002CEC4F /* DeviceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */; };
+		F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		F5234B391ADD9D2B002CEC4F /* SingleDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleDeviceViewController.m; sourceTree = "<group>"; };
 		F5234B3A1ADD9D2B002CEC4F /* DeviceTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTableViewController.h; sourceTree = "<group>"; };
 		F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceTableViewController.m; sourceTree = "<group>"; };
+		F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKDeviceTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 			children = (
 				6003F5BB195388D20070C39A /* Tests.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
+				F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */,
 				6003F5BC195388D20070C39A /* Tests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
