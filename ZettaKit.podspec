@@ -1,28 +1,15 @@
-#
-# Be sure to run `pod lib lint ZettaKit.podspec' to ensure this is a
-# valid spec and remove all comments before submitting the spec.
-#
-# Any lines starting with a # are optional, but encouraged
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = "ZettaKit"
   s.version          = "0.1.0"
-  s.summary          = "A short description of ZettaKit."
+  s.summary          = "A Reactive Hypermedia Client for the Zetta HTTP API."
   s.description      = <<-DESC
-                       An optional longer description of ZettaKit
-
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
-                       DESC
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/ZettaKit"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+                        This library allows you to harness the power of Reactive Programming to interact with the Zetta HTTP API.
+                        DESC
+  s.homepage         = "https://github.com/zettajs/ZettaKit"
   s.license          = 'MIT'
-  s.author           = { "Matthew Dobson" => "mdobson4@gmail.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/ZettaKit.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { "Matthew Dobson" => "matt@apigee.com" }
+  s.source           = { :git => "https://github.com/zettajs/ZettaKit.git", :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/zettajs'
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
@@ -31,8 +18,6 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'ZettaKit' => ['Pod/Assets/*.png']
   }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'ReactiveCocoa', '2.4.7'
+  s.dependency 'SocketRocket', '0.3.1-beta2'
 end

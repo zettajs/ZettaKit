@@ -11,7 +11,6 @@
 
 /**
  `ZIKDevice` represents a device within the Zetta API. It's used for storing device data, interacting with streaming data from the API, and calling transitions over HTTP.
- 
  */
 
 @interface ZIKDevice : NSObject
