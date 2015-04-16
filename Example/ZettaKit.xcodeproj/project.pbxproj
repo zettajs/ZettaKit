@@ -25,6 +25,7 @@
 		F46EDB15BA3689EE3D08E905 /* libPods-ZettaKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F6A97213047C06128DAC0 /* libPods-ZettaKit.a */; };
 		F51C9A141AE01EAB004BC6FA /* ZIKLinkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */; };
 		F51C9A281AE0270E004BC6FA /* ZIKUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */; };
+		F51C9A2A1AE050A0004BC6FA /* ZIKTransitionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C9A291AE050A0004BC6FA /* ZIKTransitionTests.m */; };
 		F5234B3C1ADD9D2B002CEC4F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B371ADD9D2B002CEC4F /* ViewController.m */; };
 		F5234B3D1ADD9D2B002CEC4F /* SingleDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B391ADD9D2B002CEC4F /* SingleDeviceViewController.m */; };
 		F5234B3E1ADD9D2B002CEC4F /* DeviceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */; };
@@ -73,6 +74,7 @@
 		DFC47C7907EAD5AB1BFE65F7 /* ZettaKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZettaKit.podspec; path = ../ZettaKit.podspec; sourceTree = "<group>"; };
 		F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKLinkTests.m; sourceTree = "<group>"; };
 		F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKUtilTests.m; sourceTree = "<group>"; };
+		F51C9A291AE050A0004BC6FA /* ZIKTransitionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKTransitionTests.m; sourceTree = "<group>"; };
 		F5234B361ADD9D2B002CEC4F /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F5234B371ADD9D2B002CEC4F /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F5234B381ADD9D2B002CEC4F /* SingleDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleDeviceViewController.h; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */,
 				F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */,
 				F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */,
+				F51C9A291AE050A0004BC6FA /* ZIKTransitionTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				F51C9A281AE0270E004BC6FA /* ZIKUtilTests.m in Sources */,
 				F51C9A141AE01EAB004BC6FA /* ZIKLinkTests.m in Sources */,
 				F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */,
+				F51C9A2A1AE050A0004BC6FA /* ZIKTransitionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

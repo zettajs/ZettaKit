@@ -34,7 +34,6 @@
         } else {
             self.type = @"application/x-www-form-urlencoded";
         }
-        self.type = data[@"type"];
         self.fields = data[@"fields"];
     }
     return self;
