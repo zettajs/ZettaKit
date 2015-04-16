@@ -9,6 +9,29 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+```objective-c
+
+//How to fully crawl your Zetta API
+ZIKSession *session = [ZIKSession sharedSession];
+
+RACSignal *root = [session root:[NSURL URLWithString:@"http://zetta-cloud-2.herokuapp.com/"]];
+RACSignal *servers = [session servers:root];
+RACSignal *devices = [session devices:servers];
+
+[root subscribeNext:^(ZIKRoot *root) {
+  NSLog(@"%@", root);  
+}];
+
+[servers subscribeNext:^(ZIKServer *server) {
+  NSLog(@"%@", server);  
+}];
+
+[devices subscribeNext:^(ZIKDevice *device) {
+  NSLog(@"%@", device);  
+}];
+
+```
+
 ## Requirements
 
 This library requires the following components
