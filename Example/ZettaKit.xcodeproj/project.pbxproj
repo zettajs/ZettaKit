@@ -23,6 +23,8 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		F46EDB15BA3689EE3D08E905 /* libPods-ZettaKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F6A97213047C06128DAC0 /* libPods-ZettaKit.a */; };
+		F51C9A141AE01EAB004BC6FA /* ZIKLinkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */; };
+		F51C9A281AE0270E004BC6FA /* ZIKUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */; };
 		F5234B3C1ADD9D2B002CEC4F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B371ADD9D2B002CEC4F /* ViewController.m */; };
 		F5234B3D1ADD9D2B002CEC4F /* SingleDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B391ADD9D2B002CEC4F /* SingleDeviceViewController.m */; };
 		F5234B3E1ADD9D2B002CEC4F /* DeviceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */; };
@@ -69,6 +71,8 @@
 		C8BDB75BF240AEB0F3DC12B3 /* Pods-ZettaKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZettaKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZettaKit/Pods-ZettaKit.debug.xcconfig"; sourceTree = "<group>"; };
 		DE849386E4A5B4BF251189EB /* Pods-ZettaKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZettaKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZettaKit/Pods-ZettaKit.release.xcconfig"; sourceTree = "<group>"; };
 		DFC47C7907EAD5AB1BFE65F7 /* ZettaKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZettaKit.podspec; path = ../ZettaKit.podspec; sourceTree = "<group>"; };
+		F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKLinkTests.m; sourceTree = "<group>"; };
+		F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKUtilTests.m; sourceTree = "<group>"; };
 		F5234B361ADD9D2B002CEC4F /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F5234B371ADD9D2B002CEC4F /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F5234B381ADD9D2B002CEC4F /* SingleDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleDeviceViewController.h; sourceTree = "<group>"; };
@@ -175,6 +179,8 @@
 			children = (
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */,
+				F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */,
+				F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -389,6 +395,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F51C9A281AE0270E004BC6FA /* ZIKUtilTests.m in Sources */,
+				F51C9A141AE01EAB004BC6FA /* ZIKLinkTests.m in Sources */,
 				F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

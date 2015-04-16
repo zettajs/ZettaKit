@@ -50,6 +50,8 @@ describe(@"ZIKDevice", ^{
             expect(device.type).to.equal(@"led");
             expect(device.state).to.equal(@"off");
         });
+        
+        
     });
 });
 
