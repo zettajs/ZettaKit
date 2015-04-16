@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ZettaKit"
-  s.version          = "0.0.1"
+  s.version          = "0.0.2"
   s.summary          = "A Reactive Hypermedia Client for the Zetta HTTP API."
   s.description      = <<-DESC
                         This library allows you to harness the power of Reactive Programming to interact with the Zetta HTTP API.
