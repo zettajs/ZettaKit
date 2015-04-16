@@ -43,6 +43,13 @@ describe(@"ZIKDevice", ^{
             expect(device.type).to.equal(@"led");
             expect(device.state).to.equal(@"off");
         });
+        
+        it(@"Can be initialized with another dictionary method", ^{
+            ZIKDevice *device = [[ZIKDevice alloc] initWithDictionary:data];
+            expect(device.uuid).to.equal(@"a2f62fda-4a8c-4433-ac49-721ffac92ce4");
+            expect(device.type).to.equal(@"led");
+            expect(device.state).to.equal(@"off");
+        });
     });
 });
 
