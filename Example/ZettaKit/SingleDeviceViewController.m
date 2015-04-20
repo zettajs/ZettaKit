@@ -60,10 +60,15 @@
 }
 
 -(void) turnOn {
-    [self.device transition:self.transition.name andCompletion:^(NSError *err, ZIKDevice *device, NSURLResponse *response) {
-        self.device = device;
-        self.transition = self.device.transitions[0];
-        [self.action setTitle:self.transition.name forState:UIControlStateNormal];
+    [self.device transition:self.transition.name andCompletion:^(NSError *err, ZIKDevice *device) {
+        if(err == nil) {
+            NSLog(@"%@", device);
+            self.device = device;
+            self.transition = self.device.transitions[0];
+            [self.action setTitle:self.transition.name forState:UIControlStateNormal];
+        } else {
+            NSLog(@"Error:%@", err);
+        }
     }];
     
 }

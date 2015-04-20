@@ -41,18 +41,8 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 }
 
 - (RACSignal *) get:(NSURL *)url {
-    RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-        NSURLSession *session = [NSURLSession sharedSession];
-        NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            NSDictionary *body = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-            [subscriber sendNext:body];
-            [subscriber sendCompleted];
-        }];
-        [task resume];
-        return nil;
-    }];
-    
-    return signal;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    return [self taskForRequest:request];
 }
 
 - (RACSignal *) queryRequest:(ZIKQuery *)query {
@@ -210,4 +200,36 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     return namedServer;
 }
 
+- (RACSignal *) taskForRequest:(NSURLRequest *)req {
+    RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        NSURLSession *sharedSession = [NSURLSession sharedSession];
+        [[sharedSession dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
+            if (error != nil) {
+                [subscriber sendError:error];
+                [subscriber sendCompleted];
+            } else {
+                if ([res statusCode] != 200) {
+                    [subscriber sendError:[[NSError alloc] initWithDomain:@"org.zettakit" code:404 userInfo:@{@"message": @"body length 0"}]];
+                    [subscriber sendCompleted];
+                } else if ([data length] == 0) {
+                    [subscriber sendError:[[NSError alloc] initWithDomain:@"org.zettakit" code:404 userInfo:@{@"message": @"body length 0"}]];
+                    [subscriber sendCompleted];
+                } else {
+                    NSError *err = nil;
+                    NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+                    if (err != nil) {
+                        [subscriber sendError:err];
+                        [subscriber sendCompleted];
+                    } else {
+                        [subscriber sendNext:parsedData];
+                        [subscriber sendCompleted];
+                    }
+                }
+            }
+        }] resume];
+        return nil;
+    }];
+    return taskSignal;
+}
 @end

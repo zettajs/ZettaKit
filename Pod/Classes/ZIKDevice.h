@@ -45,7 +45,7 @@
  */
 @property (nonatomic, retain, readonly) NSArray *links;
 
-typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device, NSURLResponse *response);
+typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
 
 ///---------------------------
 /// @name Initialization
@@ -93,14 +93,15 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device, NSURLResponse *
  
  @param name The name of the transition to execute.
  
+ @return An RACSignal object that can be subscribed to and operated on. The observable subscribe to ZIKDevice instances.
  */
-- (void) transition:(NSString *) name;
+- (RACSignal *) transition:(NSString *) name;
 
 /**
  Perform an argumentless state transition on an object. This will simply send a transition call to the API without any extra data.
  
  @param name The name of the transition to execute.
- @param block A block object to be executed when the task finishes. This block has no return value and takes three arguments: Any error from attempting to complete the task, the new device representation from the completed task, and the HTTP response from the API.
+ @param block A block object to be executed when the task finishes. This block has no return value and takes two arguments: Any error from attempting to complete the task, the new device representation from the completed task.
  
  */
 - (void) transition:(NSString *) name andCompletion:(CompletionBlock)block;
@@ -110,15 +111,17 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device, NSURLResponse *
  
  @param name The name of the transition to execute.
  @param args The `NSDictionary` of key value pairs representing arguments to be given to the transition.
+ 
+ @return An RACSignal object that can be subscribed to and operated on. The observable subscribe to ZIKDevice instances.
  */
-- (void) transition:(NSString *) name withArguments:(NSDictionary *)args;
+- (RACSignal *) transition:(NSString *) name withArguments:(NSDictionary *)args;
 
 /**
  Perform a transition with extra arguments.
  
  @param name The name of the transition to execute.
   @param args The `NSDictionary` of key value pairs representing arguments to be given to the transition.
- @param block A block object to be executed when the task finishes. This block has no return value and takes three arguments: Any error from attempting to complete the task, the new device representation from the completed task, and the HTTP response from the API.
+ @param block A block object to be executed when the task finishes. This block has no return value and takes two arguments: Any error from attempting to complete the task, the new device representation from the completed task.
  */
 - (void) transition:(NSString *)name withArguments:(NSDictionary *)args andCompletion:(CompletionBlock)block;
 

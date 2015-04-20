@@ -112,4 +112,13 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  */
 - (void) queryDevices:(NSArray *)queries withCompletion:(DevicesCompletionBlock)block;
 
+/**
+ Start an HTTP task over the Zetta API, and receive an observable for it.
+ 
+ @param req An NSURLRequest for the task that needs to be executed.
+ 
+ @return An RACSignal object that can be subscribed to an operated on. Subscription to this observable will send back a siren document.
+ */
+- (RACSignal *) taskForRequest:(NSURLRequest *)req;
+
 @end
