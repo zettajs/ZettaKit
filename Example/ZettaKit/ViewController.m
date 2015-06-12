@@ -34,8 +34,9 @@
 
     
     self._servers = [[NSMutableArray alloc] init];
-    NSURL *url = [NSURL URLWithString:@"http://zt-1-mdobs.herokuapp.com/"];
+    NSURL *url = [NSURL URLWithString:@"http://localhost:3001/"];
     ZIKSession *session = [ZIKSession sharedSession];
+    [session useSpdyWithURL:url];
     RACSignal *root = [session root:url];
     self.serverSignal = [session servers:root];
     RACSignal *collected = [self.serverSignal collect];

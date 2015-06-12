@@ -24,6 +24,8 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
 @property (nonatomic, retain, readonly) NSURL* apiEndpoint;
 
 
+- (void) useSpdyWithURL:(NSURL*)spdyEndpoint;
+- (void) endSpdySession;
 
 ///---------------------------
 /// @name Initialization

@@ -12,6 +12,7 @@
 #import "ZIKDevice.h"
 #import "ZIKUtil.h"
 #import "ZIKLink.h"
+#import "ZIKSpdyDelegate.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ISpdy/ispdy.h>
 
@@ -20,6 +21,8 @@
 typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 
 @property (nonatomic, retain, readwrite) NSURL *apiEndpoint;
+@property (nonatomic) BOOL isSpdy;
+@property (nonatomic, retain) ISpdy *spdyConnection;
 
 - (RACSignal *) get:(NSURL *)url;
 - (RACSignal *) queryRequest:(ZIKQuery *)query;
@@ -29,13 +32,29 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 
 @implementation ZIKSession
 
+- (void) useSpdyWithURL:(NSURL*)spdyEndpoint {
+    self.isSpdy = YES;
+    self.apiEndpoint = spdyEndpoint;
+    self.spdyConnection = [[ISpdy alloc] init:kISpdyV3 host:spdyEndpoint.host port:[spdyEndpoint.port integerValue] secure:NO];
+    [self.spdyConnection connect];
+}
+
+- (void) endSpdySession {
+    if (self.isSpdy) {
+        [self.spdyConnection close];
+        self.apiEndpoint = nil;
+        self.isSpdy = NO;
+    }
+}
+
 +(instancetype) sharedSession {
     static dispatch_once_t p = 0;
     
-    __strong static id _sharedObject = nil;
+    __strong static ZIKSession *_sharedObject = nil;
     
     dispatch_once(&p, ^{
         _sharedObject = [[self alloc] init];
+        _sharedObject.isSpdy = NO;
     });
     
     return _sharedObject;
@@ -201,7 +220,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     return namedServer;
 }
 
-- (RACSignal *) taskForRequest:(NSURLRequest *)req {
+- (RACSignal *)HTTPTaskForRequest:(NSURLRequest *)req {
     RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         NSURLSession *sharedSession = [NSURLSession sharedSession];
         [[sharedSession dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -232,5 +251,41 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
         return nil;
     }];
     return taskSignal;
+}
+
+- (RACSignal *) SPDYTaskForRequest:(NSURLRequest *)req {
+    @weakify(self)
+    RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        @strongify(self)
+        ISpdyRequest *spdyReq = [[ISpdyRequest alloc] init:req.HTTPMethod url:req.URL.path];
+        ZIKSpdyDelegate *delegate = [ZIKSpdyDelegate initWithCompletion:^(ISpdyError *err, NSDictionary *headers, NSData *data) {
+            if (err) {
+                NSLog(@"%@", err);
+            } else {
+                NSError *err = nil;
+                NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+                if (err != nil) {
+                    [subscriber sendError:err];
+                    [subscriber sendCompleted];
+                } else {
+                    [subscriber sendNext:parsedData];
+                    [subscriber sendCompleted];
+                }
+            }
+        }];
+        spdyReq.delegate = delegate;
+        [self.spdyConnection send:spdyReq];
+        [spdyReq end];
+        return nil;
+    }];
+    return taskSignal;
+}
+
+- (RACSignal *) taskForRequest:(NSURLRequest *)req {
+    if (self.isSpdy == YES) {
+        return [self SPDYTaskForRequest:req];
+    } else {
+        return [self HTTPTaskForRequest:req];
+    }
 }
 @end
