@@ -1,5 +1,6 @@
 PODS:
-  - Expecta (0.4.0)
+  - Expecta (1.0.0)
+  - ISpdy (0.1.0)
   - ReactiveCocoa (2.4.7):
     - ReactiveCocoa/UI (= 2.4.7)
   - ReactiveCocoa/Core (2.4.7):
@@ -8,27 +9,36 @@ PODS:
   - ReactiveCocoa/UI (2.4.7):
     - ReactiveCocoa/Core
   - SocketRocket (0.3.1-beta2)
-  - Specta (0.5.0)
-  - ZettaKit (0.1.0):
+  - Specta (1.0.2)
+  - ZettaKit (0.0.2):
     - ReactiveCocoa (= 2.4.7)
     - SocketRocket (= 0.3.1-beta2)
 
 DEPENDENCIES:
   - Expecta
+  - ISpdy (from `https://github.com/mdobson/iSPDY.git`)
   - ReactiveCocoa (= 2.4.7)
   - SocketRocket (= 0.3.1-beta2)
   - Specta
   - ZettaKit (from `../`)
 
 EXTERNAL SOURCES:
+  ISpdy:
+    :git: https://github.com/mdobson/iSPDY.git
   ZettaKit:
     :path: ../
 
+CHECKOUT OPTIONS:
+  ISpdy:
+    :commit: 6b2eb29d7a47309ab70eb013dec3a2a0a6053011
+    :git: https://github.com/mdobson/iSPDY.git
+
 SPEC CHECKSUMS:
-  Expecta: 392a6b5bfb9f4097e47dd8064d9b732079490332
+  Expecta: 32604574add2c46a36f8d2f716b6c5736eb75024
+  ISpdy: e0810a638ce31594b35f4816861f5162489afb82
   ReactiveCocoa: eb38dee0a0e698f73a9b25e5c1faea2bb4c79240
   SocketRocket: 7284ab9370a06c99aba92b2fe3a32aedd0f9a6fa
-  Specta: eb90708ed77569bbda089f8ead10bb99b8e9489e
-  ZettaKit: d5fb0803413e517201a9bdbbd19586743f0fea41
+  Specta: 9cec98310dca411f7c7ffd6943552b501622abfe
+  ZettaKit: 1f65c4ceed7c3420b1b635fdd68281a38e91c117
 
-COCOAPODS: 0.36.3
+COCOAPODS: 0.37.2

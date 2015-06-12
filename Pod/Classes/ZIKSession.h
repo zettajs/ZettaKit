@@ -23,6 +23,8 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  */
 @property (nonatomic, retain, readonly) NSURL* apiEndpoint;
 
+
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------
