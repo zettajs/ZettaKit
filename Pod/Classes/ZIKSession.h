@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKQuery.h"
+#import <ISpdy/ispdy.h>
 
 /**
  The `ZIKSession` class manages most API transactions that take place with the Zetta HTTP API. It uses reactive programming to provide a robust model of API traversal and filtering.
@@ -26,6 +27,8 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
 
 - (void) useSpdyWithURL:(NSURL*)spdyEndpoint;
 - (void) endSpdySession;
+- (BOOL) usingSpdy;
+- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request;
 
 ///---------------------------
 /// @name Initialization

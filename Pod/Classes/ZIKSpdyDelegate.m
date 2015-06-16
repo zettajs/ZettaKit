@@ -35,28 +35,19 @@
 }
 
 - (void) request:(ISpdyRequest *)req handleHeaders:(NSDictionary *)headers {
-    NSLog(@"HEADERS");
-    NSLog(@"%@", headers);
     self.headers = headers;
 }
 
 - (void) request:(ISpdyRequest *)req handleEnd:(ISpdyError *)err {
-    NSLog(@"END");
-    NSLog(@"Err?: %@", err);
-    if (!err) {
-        self.block(err, self.headers, self.data);
-    }
+    self.block(err, self.headers, self.data);
 }
 
 - (void) request:(ISpdyRequest *)req handleInput:(NSData *)input {
-    NSLog(@"INPUT");
-    NSLog(@"%@", input);
     self.data = input;
 }
 
 - (void) request:(ISpdyRequest *)req handleResponse:(ISpdyResponse *)res {
-    NSLog(@"RESPONSE");
-    NSLog(@"%@", res);
+    
 }
 
 @end

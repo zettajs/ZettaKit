@@ -13,6 +13,7 @@
 #import "ZIKUtil.h"
 #import "ZIKLink.h"
 #import "ZIKSpdyDelegate.h"
+#import "ZIKPubSubBroker.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ISpdy/ispdy.h>
 
@@ -36,6 +37,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     self.isSpdy = YES;
     self.apiEndpoint = spdyEndpoint;
     self.spdyConnection = [[ISpdy alloc] init:kISpdyV3 host:spdyEndpoint.host port:[spdyEndpoint.port integerValue] secure:NO];
+    [self.spdyConnection setDelegate:[ZIKPubSubBroker sharedBroker]];
     [self.spdyConnection connect];
 }
 
@@ -45,6 +47,15 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
         self.apiEndpoint = nil;
         self.isSpdy = NO;
     }
+}
+
+- (BOOL) usingSpdy {
+    return self.isSpdy;
+}
+
+- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request {
+    [self.spdyConnection send:request];
+    [request end];
 }
 
 +(instancetype) sharedSession {
@@ -258,24 +269,36 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         @strongify(self)
         ISpdyRequest *spdyReq = [[ISpdyRequest alloc] init:req.HTTPMethod url:req.URL.path];
-        ZIKSpdyDelegate *delegate = [ZIKSpdyDelegate initWithCompletion:^(ISpdyError *err, NSDictionary *headers, NSData *data) {
-            if (err) {
-                NSLog(@"%@", err);
+        ZIKSpdyDelegate *delegate = [ZIKSpdyDelegate initWithCompletion:^(ISpdyError *error, NSDictionary *headers, NSData *data) {
+            if (error != nil) {
+                NSLog(@"ERROR: %@", error);
             } else {
                 NSError *err = nil;
-                NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-                if (err != nil) {
-                    [subscriber sendError:err];
-                    [subscriber sendCompleted];
+                if ([data length] != 0) {
+                    NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+                    if (err != nil) {
+                        [subscriber sendError:err];
+                        [subscriber sendCompleted];
+                    } else {
+                        [subscriber sendNext:parsedData];
+                        [subscriber sendCompleted];
+                    }
                 } else {
-                    [subscriber sendNext:parsedData];
-                    [subscriber sendCompleted];
                 }
             }
         }];
         spdyReq.delegate = delegate;
         [self.spdyConnection send:spdyReq];
-        [spdyReq end];
+        if (req.HTTPBody != nil) {
+            NSDictionary *headers = @{@"Accept": @"application/vnd.siren+json", @"Content-Type": @"application/x-www-form-urlencoded", @"Content-Length":[NSNumber numberWithUnsignedInteger:[req.HTTPBody length]]};
+            [spdyReq setHeaders:headers];
+            [spdyReq writeData:req.HTTPBody];
+            [spdyReq end];
+        } else {
+            NSDictionary *headers = @{@"Accept": @"application/vnd.siren+json"};
+            [spdyReq setHeaders:headers];
+            [spdyReq end];
+        }
         return nil;
     }];
     return taskSignal;

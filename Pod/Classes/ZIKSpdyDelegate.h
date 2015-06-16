@@ -13,6 +13,8 @@
 
 typedef void (^SPDYRequestCompletion)(ISpdyError *err, NSDictionary *headers, NSData *data);
 
+@property (nonatomic) BOOL isPushStream;
+
 + (instancetype) initWithCompletion:(SPDYRequestCompletion) block;
 - (id) initWithCompletion:(SPDYRequestCompletion) block;
 

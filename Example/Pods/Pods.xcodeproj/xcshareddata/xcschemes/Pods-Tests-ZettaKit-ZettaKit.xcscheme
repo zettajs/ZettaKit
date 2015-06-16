@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C1D327670411BCD2A2A7A8DF"
+               BlueprintIdentifier = "2FDB07223BCB34CDB2374F30"
                BuildableName = "ZettaKit.bundle"
                BlueprintName = "Pods-Tests-ZettaKit-ZettaKit"
                ReferencedContainer = "container:Pods.xcodeproj">

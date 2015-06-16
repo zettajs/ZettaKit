@@ -36,8 +36,11 @@
         
     } else if ([self.device.type isEqualToString:@"photocell"]) {
         self.streamSignal = [self.device stream:@"intensity"];
+        __block SingleDeviceViewController *vc = self;
         [self.streamSignal.signal subscribeNext:^(ZIKStreamEntry *x) {
-            self.stream.text = [NSString stringWithFormat:@"%@", x.data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                vc.stream.text = [NSString stringWithFormat:@"%@", x.data];
+            });
         }];
         [self.streamSignal resume];
         self.action.hidden = YES;

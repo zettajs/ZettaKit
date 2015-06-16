@@ -7,16 +7,21 @@
 //
 
 #import "ZIKStream.h"
+#import "ZIKSession.h"
 #import <SocketRocket/SRWebSocket.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKStreamEntry.h"
 #import "ZIKLogStreamEntry.h"
+#import "ZIKSpdyDelegate.h"
+#import "ZIKPubSubBroker.h"
+#import <ISpdy/ispdy.h>
 
 @interface ZIKStream () <SRWebSocketDelegate>
 
 @property (nonatomic, retain) NSString *url;
 
 @property (nonatomic, retain) id<RACSubscriber> subscriber;
+@property (nonatomic) BOOL flowing;
 
 @end
 
@@ -38,15 +43,24 @@
         
         if ([data objectForKey:@"href"]) {
             self.url = data[@"href"];
+            self.flowing = NO;
             NSURL *streamUrl = [NSURL URLWithString:self.url];
-            _socket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:streamUrl]];
-            _socket.delegate = self;
-            @weakify(self)
-            self.signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-                @strongify(self)
-                self.subscriber = subscriber;
-                return nil;
-            }];
+            ZIKSession *session = [ZIKSession sharedSession];
+            if ([session usingSpdy]) {
+                NSString * streamPath = [NSString stringWithFormat:@"%@?%@", streamUrl.path, streamUrl.query];
+                ZIKPubSubBroker *broker = [ZIKPubSubBroker sharedBroker];
+                [broker subscribe:streamPath withHandler:^(NSData *pushData) {
+                }];
+            } else {
+                _socket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:streamUrl]];
+                _socket.delegate = self;
+                @weakify(self)
+                self.signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+                    @strongify(self)
+                    self.subscriber = subscriber;
+                    return nil;
+                }];
+            }
         }
     }
     return self;
@@ -60,22 +74,50 @@
     if (self = [super init]) {
         self.title = link.title;
         self.url = link.href;
+        self.flowing = NO;
         NSURL *streamUrl = [NSURL URLWithString:self.url];
-        _socket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:streamUrl]];
-        _socket.delegate = self;
-        @weakify(self)
-        self.signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-            @strongify(self)
-            self.subscriber = subscriber;
-            return nil;
-        }];
+        ZIKSession *session = [ZIKSession sharedSession];
+        if ([session usingSpdy]) {
+            NSString * streamPath = [NSString stringWithFormat:@"%@?%@", streamUrl.path, streamUrl.query];
+            __block ZIKPubSubBroker *broker = [ZIKPubSubBroker sharedBroker];
+            @weakify(self)
+            self.signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+                @strongify(self)
+                self.subscriber = subscriber;
+                [broker subscribe:streamPath withHandler:^(NSData *pushData) {
+                    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:pushData options:0 error:nil];
+                    if (self.flowing) {
+                        if ([self.title isEqualToString:@"logs"]) {
+                            [self.subscriber sendNext:[ZIKLogStreamEntry initWithDictionary:data]];
+                        } else {
+                            [self.subscriber sendNext:[ZIKStreamEntry initWithDictionary:data]];
+                        }
+                    }
+                }];
+                return nil;
+            }];
+        } else {
+            _socket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:streamUrl]];
+            _socket.delegate = self;
+            @weakify(self)
+            self.signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+                @strongify(self)
+                self.subscriber = subscriber;
+                return nil;
+            }];
+        }
 
     }
     return self;
 }
 
 - (void) resume {
-    [_socket open];
+    ZIKSession *session = [ZIKSession sharedSession];
+    if ([session usingSpdy]) {
+        self.flowing = YES;
+    } else {
+        [_socket open];
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
@@ -105,7 +147,12 @@
 }
 
 - (void) stop {
-    [_socket close];
+    ZIKSession *session = [ZIKSession sharedSession];
+    if ([session usingSpdy]) {
+        self.flowing = NO;
+    } else {
+        [_socket close];
+    }
 }
 
 - (NSString *)description {
