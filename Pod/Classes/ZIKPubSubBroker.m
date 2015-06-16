@@ -51,10 +51,12 @@
     return _sharedObject;
 }
 
+//TODO: Implement
 - (void) handleConnect:(ISpdy *)conn {
     
 }
 
+//TODO: Implement
 - (void) connection:(ISpdy *)conn handleError:(ISpdyError *)err {
     
 }
@@ -111,6 +113,10 @@
     ZIKSession *session = [ZIKSession sharedSession];
     ISpdyRequest *request = [[ISpdyRequest alloc] init:@"GET" url:url];
     [session spdyPushTaskWithRequest:request];
+}
+
+- (void) logSpdyEvents:(ISpdy *)conn level:(ISpdyLogLevel)level message:(NSString *)message {
+    //TODO: Implement in graceful way.
 }
 
 @end

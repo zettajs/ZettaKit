@@ -26,7 +26,7 @@
 #import <Foundation/Foundation.h>
 #import <ISpdy/ispdy.h>
 
-@interface ZIKPubSubBroker : NSObject<ISpdyDelegate>
+@interface ZIKPubSubBroker : NSObject<ISpdyDelegate, ISpdyLogDelegate>
 
 typedef void (^ZIKSpdyPushHandler)(NSData *pushData);
 
