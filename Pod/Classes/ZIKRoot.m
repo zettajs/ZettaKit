@@ -39,7 +39,7 @@
     return [[ZIKRoot alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         if ([data objectForKey:@"links"]) {
             NSMutableArray *links = [[NSMutableArray alloc] init];

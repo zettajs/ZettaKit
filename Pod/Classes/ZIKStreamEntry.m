@@ -40,7 +40,7 @@
     return [[ZIKStreamEntry alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSNumber *timestamp = [data objectForKey:@"timestamp"];
         id dataEntry = [data objectForKey:@"data"];

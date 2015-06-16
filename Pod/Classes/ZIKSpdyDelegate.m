@@ -43,7 +43,7 @@
     return [[ZIKSpdyDelegate alloc] initWithCompletion:block];
 }
 
-- (id) initWithCompletion:(SPDYRequestCompletion) block {
+- (instancetype) initWithCompletion:(SPDYRequestCompletion) block {
     if (self = [super init]) {
         self.block = block;
         self.headers = nil;

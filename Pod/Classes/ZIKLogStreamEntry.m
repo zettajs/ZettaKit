@@ -37,7 +37,7 @@
 
 @implementation ZIKLogStreamEntry
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         self.timestamp = data[@"timestamp"];
         self.topic = data[@"topic"];

@@ -40,7 +40,7 @@
     return [[ZIKLink alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         self.href = data[@"href"];
         self.rel = data[@"rel"];

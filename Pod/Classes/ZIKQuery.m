@@ -39,7 +39,7 @@
     return [[ZIKQuery alloc] initWithQuery:query andServer:server];
 }
 
-- (id) initWithQuery:(NSString *)query andServer:(ZIKServer *)server {
+- (instancetype) initWithQuery:(NSString *)query andServer:(ZIKServer *)server {
     if (self = [super init]) {
         self.query = query;
         self.server = server;

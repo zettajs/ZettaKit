@@ -42,7 +42,7 @@
     return [[ZIKTransition alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         self.name = data[@"name"];
         self.href = data[@"href"];

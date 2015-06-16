@@ -23,7 +23,7 @@
     return [[ZIKServer alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         if([data objectForKey:@"properties"] != nil) {
             NSDictionary *properties = data[@"properties"];

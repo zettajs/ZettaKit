@@ -53,7 +53,7 @@
 
 
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         if ([data objectForKey:@"title"]) {
             self.title = data[@"title"];
