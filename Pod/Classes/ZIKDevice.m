@@ -77,7 +77,7 @@
 
 - (void) refresh:(NSDictionary *)data {
     self.sirenData = data;
-    if ([data objectForKey:@"properties"]) {
+    if ([data objectForKey:@"properties"] != nil) {
         self.properties = [data objectForKey:@"properties"];
         self.type = self.properties[@"type"];
         self.name = self.properties[@"name"];
@@ -85,7 +85,7 @@
         self.state = self.properties[@"state"];
     }
     
-    if ([data objectForKey:@"links"]) {
+    if ([data objectForKey:@"links"] != nil) {
         NSMutableArray *links = [[NSMutableArray alloc] init];
         NSMutableArray *streams = [[NSMutableArray alloc] init];
         for (NSDictionary *linkData in data[@"links"]) {
