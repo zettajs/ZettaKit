@@ -40,6 +40,8 @@
 
 @property (nonatomic, retain) id<RACSubscriber> subscriber;
 @property (nonatomic) BOOL flowing;
+@property (nonatomic, retain, readwrite) NSString *title;
+@property (nonatomic, retain, readwrite) RACSignal *signal;
 
 @end
 

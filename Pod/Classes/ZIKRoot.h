@@ -33,12 +33,12 @@
 /**
  An `NSArray` of `ZIKLink` objects. Represents current links available for navigating in the current context.
  */
-@property (nonatomic, retain) NSArray *links;
+@property (nonatomic, retain, readonly) NSArray *links;
 
 /**
  An `NSArray` of `NSDictionary` objects. Represents the actions that can be taken in the current context.
  */
-@property (nonatomic, retain) NSArray *actions;
+@property (nonatomic, retain, readonly) NSArray *actions;
 
 ///---------------------------
 /// @name Initialization

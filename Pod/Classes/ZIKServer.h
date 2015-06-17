@@ -34,12 +34,12 @@
 /**
  The devices that currently belong to the server. An `NSArray` of `ZIKDevice` objects.
  */
-@property (nonatomic, retain) NSArray *devices;
+@property (nonatomic, retain, readonly) NSArray *devices;
 
 /**
  The human readable name of the server.
  */
-@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain, readonly) NSString *name;
 
 /**
  The links that are relevant to the current server context. An `NSArray` of `ZIKLink` objects.

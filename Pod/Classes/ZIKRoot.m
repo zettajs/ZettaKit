@@ -30,6 +30,8 @@
 @interface ZIKRoot ()
 
 @property (nonatomic, retain) ZIKLink *href;
+@property (nonatomic, retain, readwrite) NSArray *links;
+@property (nonatomic, retain, readwrite) NSArray *actions;
 
 @end
 

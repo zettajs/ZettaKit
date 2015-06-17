@@ -13,6 +13,8 @@
 @interface ZIKServer ()
 
 @property (nonatomic, retain) NSDictionary *sirenData;
+@property (nonatomic, retain, readwrite) NSArray *devices;
+@property (nonatomic, retain, readwrite) NSString *name;
 @property (nonatomic, retain, readwrite) NSArray *links;
 
 @end

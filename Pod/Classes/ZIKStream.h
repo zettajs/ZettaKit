@@ -36,12 +36,12 @@
 /**
  The human readable name of the stream.
  */
-@property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain, readonly) NSString *title;
 
 /**
  The ReactiveCocoa signal needed to subscribe to updates from the stream.
  */
-@property (nonatomic, retain) RACSignal *signal;
+@property (nonatomic, retain, readonly) RACSignal *signal;
 
 ///---------------------------
 /// @name Initialization
