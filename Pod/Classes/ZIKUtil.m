@@ -47,4 +47,8 @@
     return [[encodedParams componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
++ (NSString *) generateRelForString:(NSString *)string {
+    return [NSString stringWithFormat:@"http://rels.zettajs.io/%@", string];
+}
+
 @end

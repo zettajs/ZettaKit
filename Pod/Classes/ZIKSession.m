@@ -151,7 +151,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     RACSignal * flatLinks = [linkList flatten];
     
     RACSignal * serverLinks = [flatLinks filter:^BOOL(ZIKLink *value) {
-        return [value hasRel:@"http://rels.zettajs.io/server"] || [value hasRel:@"http://rels.zettajs.io/peer"];
+        return [value hasRel:[ZIKUtil generateRelForString:@"server"]];
     }];
     
     RACSignal * serverResponses = [serverLinks map:^id(ZIKLink *value) {

@@ -39,4 +39,6 @@
  */
 + (NSString *) urlFormEncodeDictionary:(NSDictionary *) data;
 
++ (NSString *) generateRelForString:(NSString *)string;
+
 @end
