@@ -167,4 +167,29 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  */
 - (void) spdyPushTaskWithRequest:(ISpdyRequest *)request;
 
+///---------------------------
+/// @name Request configuration tasks
+///---------------------------
+
+/**
+ Set headers that will be included with every outgoing request.
+ 
+ @param headers An NSDictionary of key value pairs representing HTTP Headers.
+ */
+- (void) setHeaders:(NSDictionary *)headers;
+
+/**
+ Set a header that will be sent with every outgoing request.
+ 
+ @param key An NSString with the name of the header to be set.
+ @param value The value of the header to be sent.
+ */
+- (void) setHeader:(NSString *)key forValue:(id)value;
+
+/**
+ Un-set the header value that goes out with each HTTP request.
+ 
+ @param key An NSString with the name of the header to be un-set.
+ */
+- (void) unsetHeader:(NSString *)key;
 @end
