@@ -3,8 +3,26 @@
 //  ReactiveLearning
 //
 //  Created by Matthew Dobson on 4/7/15.
-//  Copyright (c) 2015 Matthew Dobson. All rights reserved.
+//  Copyright (c) 2015 Apigee and Contributors <matt@apigee.com>
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+
 
 #import "ZIKDevice.h"
 #import "ZIKUtil.h"
@@ -35,7 +53,7 @@
     return [[ZIKDevice alloc] initWithDictionary:data];
 }
 
-- (id) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         [self refresh:data];
     }
@@ -59,7 +77,7 @@
 
 - (void) refresh:(NSDictionary *)data {
     self.sirenData = data;
-    if ([data objectForKey:@"properties"]) {
+    if ([data objectForKey:@"properties"] != nil) {
         self.properties = [data objectForKey:@"properties"];
         self.type = self.properties[@"type"];
         self.name = self.properties[@"name"];
@@ -67,7 +85,7 @@
         self.state = self.properties[@"state"];
     }
     
-    if ([data objectForKey:@"links"]) {
+    if ([data objectForKey:@"links"] != nil) {
         NSMutableArray *links = [[NSMutableArray alloc] init];
         NSMutableArray *streams = [[NSMutableArray alloc] init];
         for (NSDictionary *linkData in data[@"links"]) {

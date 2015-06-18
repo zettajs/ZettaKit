@@ -1,14 +1,32 @@
 //
 //  ZIKSession.h
-//  ReactiveLearning
+//  ZettaKit
 //
 //  Created by Matthew Dobson on 4/3/15.
-//  Copyright (c) 2015 Matthew Dobson. All rights reserved.
+//  Copyright (c) 2015 Apigee and Contributors <matt@apigee.com>
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKQuery.h"
+#import <ISpdy/ispdy.h>
 
 /**
  The `ZIKSession` class manages most API transactions that take place with the Zetta HTTP API. It uses reactive programming to provide a robust model of API traversal and filtering.
@@ -120,5 +138,33 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  @return An RACSignal object that can be subscribed to an operated on. Subscription to this observable will send back a siren document.
  */
 - (RACSignal *) taskForRequest:(NSURLRequest *)req;
+
+///---------------------------
+/// @name SPDY Specific tasks
+///---------------------------
+
+/**
+ Start a persistent SPDY connection at the particular endpoint.
+ 
+ @param spdyEndpoint An NSURL that points at a SPDY enabled Zetta server.
+ */
+- (void) useSpdyWithURL:(NSURL*)spdyEndpoint;
+
+/**
+ End a persistent SPDY connection at the particular endpoint.
+ */
+- (void) endSpdySession;
+
+/**
+ Check if the current instance of `ZIKSession` is using a SPDY connection.
+ */
+- (BOOL) usingSpdy;
+
+/**
+ Start a SPDY push stream for the particular `ISpdyRequest`.
+ 
+ @param request An `ISpdyRequest` object will start a set of SPDY push streams.
+ */
+- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request;
 
 @end

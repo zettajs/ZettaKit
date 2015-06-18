@@ -3,8 +3,26 @@
 //  ReactiveLearning
 //
 //  Created by Matthew Dobson on 4/3/15.
-//  Copyright (c) 2015 Matthew Dobson. All rights reserved.
+//  Copyright (c) 2015 Apigee and Contributors <matt@apigee.com>
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+
 
 #import "ZIKSession.h"
 #import "ZIKRoot.h"
@@ -12,13 +30,18 @@
 #import "ZIKDevice.h"
 #import "ZIKUtil.h"
 #import "ZIKLink.h"
+#import "ZIKSpdyDelegate.h"
+#import "ZIKPubSubBroker.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import <ISpdy/ispdy.h>
 
 @interface ZIKSession()
 
 typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 
 @property (nonatomic, retain, readwrite) NSURL *apiEndpoint;
+@property (nonatomic) BOOL isSpdy;
+@property (nonatomic, retain) ISpdy *spdyConnection;
 
 - (RACSignal *) get:(NSURL *)url;
 - (RACSignal *) queryRequest:(ZIKQuery *)query;
@@ -28,13 +51,39 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 
 @implementation ZIKSession
 
+- (void) useSpdyWithURL:(NSURL*)spdyEndpoint {
+    self.isSpdy = YES;
+    self.apiEndpoint = spdyEndpoint;
+    self.spdyConnection = [[ISpdy alloc] init:kISpdyV3 host:spdyEndpoint.host port:[spdyEndpoint.port integerValue] secure:NO];
+    [self.spdyConnection setDelegate:[ZIKPubSubBroker sharedBroker]];
+    [self.spdyConnection connect];
+}
+
+- (void) endSpdySession {
+    if (self.isSpdy) {
+        [self.spdyConnection close];
+        self.apiEndpoint = nil;
+        self.isSpdy = NO;
+    }
+}
+
+- (BOOL) usingSpdy {
+    return self.isSpdy;
+}
+
+- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request {
+    [self.spdyConnection send:request];
+    [request end];
+}
+
 +(instancetype) sharedSession {
     static dispatch_once_t p = 0;
     
-    __strong static id _sharedObject = nil;
+    __strong static ZIKSession *_sharedObject = nil;
     
     dispatch_once(&p, ^{
         _sharedObject = [[self alloc] init];
+        _sharedObject.isSpdy = NO;
     });
     
     return _sharedObject;
@@ -102,7 +151,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     RACSignal * flatLinks = [linkList flatten];
     
     RACSignal * serverLinks = [flatLinks filter:^BOOL(ZIKLink *value) {
-        return [value hasRel:@"http://rels.zettajs.io/server"] || [value hasRel:@"http://rels.zettajs.io/peer"];
+        return [value hasRel:[ZIKUtil generateRelForString:@"server"]];
     }];
     
     RACSignal * serverResponses = [serverLinks map:^id(ZIKLink *value) {
@@ -200,7 +249,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     return namedServer;
 }
 
-- (RACSignal *) taskForRequest:(NSURLRequest *)req {
+- (RACSignal *)HTTPTaskForRequest:(NSURLRequest *)req {
     RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         NSURLSession *sharedSession = [NSURLSession sharedSession];
         [[sharedSession dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -231,5 +280,53 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
         return nil;
     }];
     return taskSignal;
+}
+
+- (RACSignal *) SPDYTaskForRequest:(NSURLRequest *)req {
+    @weakify(self)
+    RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        @strongify(self)
+        ISpdyRequest *spdyReq = [[ISpdyRequest alloc] init:req.HTTPMethod url:req.URL.path];
+        ZIKSpdyDelegate *delegate = [ZIKSpdyDelegate initWithCompletion:^(ISpdyError *error, NSDictionary *headers, NSData *data) {
+            if (error != nil) {
+                NSLog(@"ERROR: %@", error);
+            } else {
+                NSError *err = nil;
+                if ([data length] != 0) {
+                    NSDictionary *parsedData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+                    if (err != nil) {
+                        [subscriber sendError:err];
+                        [subscriber sendCompleted];
+                    } else {
+                        [subscriber sendNext:parsedData];
+                        [subscriber sendCompleted];
+                    }
+                } else {
+                }
+            }
+        }];
+        spdyReq.delegate = delegate;
+        [self.spdyConnection send:spdyReq];
+        if (req.HTTPBody != nil) {
+            NSDictionary *headers = @{@"Accept": @"application/vnd.siren+json", @"Content-Type": @"application/x-www-form-urlencoded", @"Content-Length":[NSNumber numberWithUnsignedInteger:[req.HTTPBody length]]};
+            [spdyReq setHeaders:headers];
+            [spdyReq writeData:req.HTTPBody];
+            [spdyReq end];
+        } else {
+            NSDictionary *headers = @{@"Accept": @"application/vnd.siren+json"};
+            [spdyReq setHeaders:headers];
+            [spdyReq end];
+        }
+        return nil;
+    }];
+    return taskSignal;
+}
+
+- (RACSignal *) taskForRequest:(NSURLRequest *)req {
+    if (self.isSpdy == YES) {
+        return [self SPDYTaskForRequest:req];
+    } else {
+        return [self HTTPTaskForRequest:req];
+    }
 }
 @end

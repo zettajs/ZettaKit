@@ -6,6 +6,12 @@
 // project.
 
 
+// ISpdy
+#define COCOAPODS_POD_AVAILABLE_ISpdy
+#define COCOAPODS_VERSION_MAJOR_ISpdy 0
+#define COCOAPODS_VERSION_MINOR_ISpdy 1
+#define COCOAPODS_VERSION_PATCH_ISpdy 0
+
 // ReactiveCocoa
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa 2
@@ -39,6 +45,6 @@
 // ZettaKit
 #define COCOAPODS_POD_AVAILABLE_ZettaKit
 #define COCOAPODS_VERSION_MAJOR_ZettaKit 0
-#define COCOAPODS_VERSION_MINOR_ZettaKit 1
-#define COCOAPODS_VERSION_PATCH_ZettaKit 0
+#define COCOAPODS_VERSION_MINOR_ZettaKit 0
+#define COCOAPODS_VERSION_PATCH_ZettaKit 2
 
