@@ -41,12 +41,6 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  */
 @property (nonatomic, retain, readonly) NSURL* apiEndpoint;
 
-
-- (void) useSpdyWithURL:(NSURL*)spdyEndpoint;
-- (void) endSpdySession;
-- (BOOL) usingSpdy;
-- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request;
-
 ///---------------------------
 /// @name Initialization
 ///---------------------------
@@ -144,5 +138,33 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  @return An RACSignal object that can be subscribed to an operated on. Subscription to this observable will send back a siren document.
  */
 - (RACSignal *) taskForRequest:(NSURLRequest *)req;
+
+///---------------------------
+/// @name SPDY Specific tasks
+///---------------------------
+
+/**
+ Start a persistent SPDY connection at the particular endpoint.
+ 
+ @param spdyEndpoint An NSURL that points at a SPDY enabled Zetta server.
+ */
+- (void) useSpdyWithURL:(NSURL*)spdyEndpoint;
+
+/**
+ End a persistent SPDY connection at the particular endpoint.
+ */
+- (void) endSpdySession;
+
+/**
+ Check if the current instance of `ZIKSession` is using a SPDY connection.
+ */
+- (BOOL) usingSpdy;
+
+/**
+ Start a SPDY push stream for the particular `ISpdyRequest`.
+ 
+ @param request An `ISpdyRequest` object will start a set of SPDY push streams.
+ */
+- (void) spdyPushTaskWithRequest:(ISpdyRequest *)request;
 
 @end

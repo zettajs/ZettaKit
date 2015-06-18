@@ -26,13 +26,44 @@
 #import <Foundation/Foundation.h>
 #import <ISpdy/ispdy.h>
 
+/**
+ The `ZIKPubSubBroker` object represents a the reciever for SPDY push streams.
+ */
 @interface ZIKPubSubBroker : NSObject<ISpdyDelegate, ISpdyLogDelegate>
 
 typedef void (^ZIKSpdyPushHandler)(NSData *pushData);
 
+///---------------------------
+/// @name Initialization
+///---------------------------
+
+/**
+ Initialize the singleton for this broker.
+ 
+ @return The newly initialized `ZIKPubSubBroker`.
+ */
 +(instancetype) sharedBroker;
 
+///---------------------------
+/// @name Interacting with SPDY push streams.
+///---------------------------
+
+/**
+ Sets up a listener for a SPDY push stream at a given API Path.
+ 
+ @param path The string indicating the API path to subscribe to a push stream.
+ @param handler A block object that will be called when the SPDY push stream sends data. This block has no return value and has one arguments: The data from the SPDY push stream.
+ 
+ @return NSUUID A descriptor representing the current subscription. Needed for unsubscribing.
+ */
 -(NSUUID *)subscribe:(NSString *)path withHandler:(ZIKSpdyPushHandler) handler;
+
+/**
+ Stops a listener for a SPDY push stream at a given API Path.
+ 
+ @param path The string indicating the API path to subscribe to a push stream.
+ @param descriptor A descriptor representing the current subscription that should be stopped.
+ */
 -(void)unsubscribe:(NSString *)path withDescriptor:(NSUUID *)descriptor;
 
 @end

@@ -26,13 +26,33 @@
 #import <Foundation/Foundation.h>
 #import <ISpdy/ispdy.h>
 
+/**
+ The `ZIKSpdyDelegate` implements a way of performing HTTP transactions over the SPDY protocol.
+ */
 @interface ZIKSpdyDelegate : NSObject<ISpdyRequestDelegate>
 
 typedef void (^SPDYRequestCompletion)(ISpdyError *err, NSDictionary *headers, NSData *data);
 
-@property (nonatomic) BOOL isPushStream;
+///---------------------------
+/// @name Initialization
+///---------------------------
 
+/**
+ Initializes a `ZIKSpdyDelegate` with the specified request completion block.
+ 
+ @param handler A block object that will be called when the SPDY HTTP transaction completes. This block has no return value and has three arguments: A potential SPDY error from the HTTP transaction. The return headers of the HTTP transaction. Finally the response body data of the HTTP transaction.
+ 
+ @return The newly-initialized `ZIKSpdyDelegate` object.
+ */
 + (instancetype) initWithCompletion:(SPDYRequestCompletion) block;
+
+/**
+ Initializes a `ZIKSpdyDelegate` with the specified request completion block.
+ 
+ @param handler A block object that will be called when the SPDY HTTP transaction completes. This block has no return value and has three arguments: A potential SPDY error from the HTTP transaction. The return headers of the HTTP transaction. Finally the response body data of the HTTP transaction.
+ 
+ @return The newly-initialized `ZIKSpdyDelegate` object.
+ */
 - (instancetype) initWithCompletion:(SPDYRequestCompletion) block;
 
 @end
