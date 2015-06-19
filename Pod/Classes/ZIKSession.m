@@ -42,6 +42,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 @property (nonatomic, retain, readwrite) NSURL *apiEndpoint;
 @property (nonatomic) BOOL isSpdy;
 @property (nonatomic, retain) ISpdy *spdyConnection;
+@property (nonatomic, retain) NSMutableDictionary *headers;
 
 - (RACSignal *) get:(NSURL *)url;
 - (RACSignal *) queryRequest:(ZIKQuery *)query;
@@ -84,6 +85,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     dispatch_once(&p, ^{
         _sharedObject = [[self alloc] init];
         _sharedObject.isSpdy = NO;
+        _sharedObject.headers = [[NSMutableDictionary alloc] init];
     });
     
     return _sharedObject;
@@ -250,9 +252,21 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 }
 
 - (RACSignal *)HTTPTaskForRequest:(NSURLRequest *)req {
+    NSMutableURLRequest *mutableRequest = [req mutableCopy];
     RACSignal *taskSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         NSURLSession *sharedSession = [NSURLSession sharedSession];
-        [[sharedSession dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        for (id key in self.headers) {
+            NSString *keyVal = (NSString *)key;
+            NSString *valVal = nil;
+            id value = [self.headers objectForKey:key];
+            if ([value isMemberOfClass:[NSNumber class]]) {
+                valVal = [value stringValue];
+            } else {
+                valVal = (NSString*)value;
+            }
+            [mutableRequest setValue:valVal forHTTPHeaderField:keyVal];
+        }
+        [[sharedSession dataTaskWithRequest:mutableRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
             if (error != nil) {
                 [subscriber sendError:error];
@@ -309,7 +323,10 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
         [self.spdyConnection send:spdyReq];
         if (req.HTTPBody != nil) {
             NSDictionary *headers = @{@"Accept": @"application/vnd.siren+json", @"Content-Type": @"application/x-www-form-urlencoded", @"Content-Length":[NSNumber numberWithUnsignedInteger:[req.HTTPBody length]]};
-            [spdyReq setHeaders:headers];
+            NSMutableDictionary *mergedHeaders = [[NSMutableDictionary alloc] init];
+            [mergedHeaders addEntriesFromDictionary:self.headers];
+            [mergedHeaders addEntriesFromDictionary:headers];
+            [spdyReq setHeaders:mergedHeaders];
             [spdyReq writeData:req.HTTPBody];
             [spdyReq end];
         } else {
@@ -329,4 +346,17 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
         return [self HTTPTaskForRequest:req];
     }
 }
+
+- (void) setHeaders:(NSDictionary *)headers {
+    [self.headers addEntriesFromDictionary:headers];
+}
+
+- (void) setHeader:(NSString *)key forValue:(id)value {
+    [self.headers setObject:value forKey:key];
+}
+
+- (void) unsetHeader:(NSString *)key {
+    [self.headers removeObjectForKey:key];
+}
+
 @end
