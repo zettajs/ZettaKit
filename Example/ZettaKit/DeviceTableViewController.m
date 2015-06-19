@@ -26,6 +26,7 @@
 
 #import "DeviceTableViewController.h"
 #import "SingleDeviceViewController.h"
+#import "ZIKDeviceViewController.h"
 #import "ZIKSession.h"
 #import "ZIKDevice.h"
 
@@ -70,13 +71,11 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
     return [self.devices count];
 }
@@ -138,7 +137,7 @@
     if ([[segue identifier] isEqualToString:@"Device"])
     {
         // Get reference to the destination view controller
-        SingleDeviceViewController *vc = [segue destinationViewController];
+        ZIKDeviceViewController *vc = [segue destinationViewController];
         NSIndexPath *path = [self.tableView indexPathForSelectedRow];
         ZIKDevice *device = self.devices[path.row];
         vc.device = device;
