@@ -8,10 +8,84 @@
 
 #import "ZIKTransitionViewController.h"
 
+@interface ZIKTransitionViewController ()
+
+@property (nonatomic) BOOL hasDataFields;
+@property (nonatomic) NSMutableArray *fields;
+
+@end
+
 @implementation ZIKTransitionViewController
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.navigationItem.title = self.transition.name;
+    if (self.transition.fields.count > 1) {
+        self.hasDataFields = YES;
+        self.fields = [[NSMutableArray alloc] init];
+    } else {
+        self.hasDataFields = NO;
+    }
+    [self generateUI];
 }
 
+//Generate the UI for the particular action.
+- (void) generateUI {
+    int iteration = 1;
+    for (NSDictionary *field in self.transition.fields) {
+        float height = 60.0;
+        float width = 100.0;
+        float x = CGRectGetMidX(self.view.frame);
+        float y = CGRectGetMidY(self.view.frame) + ((iteration - 1) * height);
+        CGRect rect = CGRectMake(x, y, width, height);
+        if ([field[@"type"] isEqualToString:@"hidden"]) {
+            UIButton *button = [[UIButton alloc] initWithFrame:rect];
+            [button setTitle:field[@"value"] forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(performAction) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:button];
+        } else if ([field[@"type"] isEqualToString:@"text"]) {
+            UITextField *text = [[UITextField alloc] initWithFrame:rect];
+            text.tag = iteration;
+            [self.view addSubview:text];
+            [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
+        }
+        iteration++;
+    }
+}
+
+//Perform the action of the device
+- (void) performAction {
+    if (self.hasDataFields) {
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+        for (NSDictionary *field in self.fields) {
+            NSString *type = (NSString *)field[@"type"];
+            NSString *name = (NSString *)field[@"name"];
+            NSNumber *tag = (NSNumber *)field[@"tag"];
+            if ([type isEqualToString:@"text"]) {
+                UITextField *textField = (UITextField *)[self.view viewWithTag:[tag integerValue]];
+                NSString *text = textField.text;
+                [dict setObject:text forKey:name];
+            }
+        }
+        
+        [self.device transition:self.transition.name withArguments:dict andCompletion:^(NSError *err, ZIKDevice *device) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self transitionBack];
+            });
+        }];
+    } else {
+        [self.device transition:self.transition.name andCompletion:^(NSError *err, ZIKDevice *device) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self transitionBack];
+            });
+        }];
+    }
+
+}
+
+//Transition back to the previous view controller
+- (void) transitionBack {
+    [self performSegueWithIdentifier:@"unwindFromTransition" sender:self];
+}
 @end

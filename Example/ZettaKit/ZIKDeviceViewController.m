@@ -18,8 +18,7 @@
 
 @implementation ZIKDeviceViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)refreshProperties {
     self.properties = [[NSMutableArray alloc] initWithObjects:self.device.uuid, self.device.type, nil];
     if (self.device.name != nil) {
         [self.properties addObject:self.device.name];
@@ -28,6 +27,11 @@
     if (self.device.state != nil) {
         [self.properties addObject:self.device.state];
     }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self refreshProperties];
 }
 
 - (NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -151,5 +155,9 @@
     NSString *desc = link.title != nil ? link.title : link.href;
     return @{@"description": desc};
 }
+
+- (IBAction)unwindFromAction:(UIStoryboardSegue *)sender {
+}
+
 
 @end

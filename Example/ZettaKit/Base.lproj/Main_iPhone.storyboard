@@ -109,8 +109,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Lfn-iT-Uy1"/>
+                    <connections>
+                        <segue destination="2IY-Rc-h1x" kind="unwind" identifier="unwindFromTransition" unwindAction="unwindFromAction:" id="Hen-D4-tV3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CK8-9g-nDa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="2IY-Rc-h1x" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2030" y="372"/>
         </scene>
