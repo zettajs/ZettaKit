@@ -33,13 +33,13 @@
 @interface ZIKDevice ()
 
 @property (nonatomic, retain) NSArray *streams;
-@property (nonatomic, retain) NSDictionary *properties;
 @property (nonatomic, retain) NSDictionary *sirenData;
 
 @property (nonatomic, retain, readwrite) NSString *uuid;
 @property (nonatomic, retain, readwrite) NSString *type;
 @property (nonatomic, retain, readwrite) NSString *name;
 @property (nonatomic, retain, readwrite) NSString *state;
+@property (nonatomic, retain, readwrite) NSDictionary *properties;
 @property (nonatomic, retain, readwrite) NSArray *transitions;
 @property (nonatomic, retain, readwrite) NSArray *links;
 

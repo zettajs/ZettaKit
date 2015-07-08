@@ -44,14 +44,20 @@
             [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(performAction) forControlEvents:UIControlEventTouchUpInside];
             [self.view addSubview:button];
-        } else if ([field[@"type"] isEqualToString:@"text"]) {
+        } else if ([self isTextBoxType:field[@"type"]]) {
             UITextField *text = [[UITextField alloc] initWithFrame:rect];
             text.tag = iteration;
+            text.layer.borderWidth = 5.0f;
+            text.layer.borderColor = [[UIColor grayColor] CGColor];
             [self.view addSubview:text];
             [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
         }
         iteration++;
     }
+}
+
+- (BOOL) isTextBoxType:(NSString *)type {
+    return [type isEqualToString:@"text"] || [type isEqualToString:@"search"] || [type isEqualToString:@"number"];
 }
 
 //Perform the action of the device
@@ -62,21 +68,26 @@
             NSString *type = (NSString *)field[@"type"];
             NSString *name = (NSString *)field[@"name"];
             NSNumber *tag = (NSNumber *)field[@"tag"];
-            if ([type isEqualToString:@"text"]) {
+            if ([self isTextBoxType:type]) {
                 UITextField *textField = (UITextField *)[self.view viewWithTag:[tag integerValue]];
                 NSString *text = textField.text;
                 [dict setObject:text forKey:name];
             }
         }
         
+        NSLog(@"%@", dict);
+        
         [self.device transition:self.transition.name withArguments:dict andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.device = device;
                 [self transitionBack];
+                
             });
         }];
     } else {
         [self.device transition:self.transition.name andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.device = device;
                 [self transitionBack];
             });
         }];

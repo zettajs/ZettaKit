@@ -18,20 +18,8 @@
 
 @implementation ZIKDeviceViewController
 
-- (void)refreshProperties {
-    self.properties = [[NSMutableArray alloc] initWithObjects:self.device.uuid, self.device.type, nil];
-    if (self.device.name != nil) {
-        [self.properties addObject:self.device.name];
-    }
-    
-    if (self.device.state != nil) {
-        [self.properties addObject:self.device.state];
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self refreshProperties];
 }
 
 - (NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -61,7 +49,7 @@
     
     switch (section) {
         case 0:
-            rows = self.properties.count;
+            rows = [[self.device.properties allKeys] count];
             break;
         case 1:
             rows = self.device.transitions.count;
@@ -82,7 +70,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    
     cell.textLabel.textColor = [UIColor colorWithRed:51./255.
                                                green:153./255.
                                                 blue:204./255.
@@ -90,6 +77,12 @@
     
     NSDictionary *cellDescription = [self cellDescriptionForIndexPath:indexPath];
     cell.textLabel.text = cellDescription[@"description"];
+    if (cellDescription[@"subtitle"] != nil) {
+        cell.detailTextLabel.text = cellDescription[@"subtitle"];
+    } else {
+        cell.detailTextLabel.text = @"";
+    }
+    
     if (indexPath.section == 1) {
         cell.userInteractionEnabled = YES;
     } else {
@@ -140,8 +133,10 @@
 }
 
 - (NSDictionary *) propertyDescriptionForIndexPath:(NSIndexPath *)indexPath {
-    NSString *prop = self.properties[indexPath.row];
-    return @{@"description": prop};
+    NSArray *keys = [self.device.properties allKeys];
+    NSString *key = keys[indexPath.row];
+    id prop = self.device.properties[key];
+    return @{@"description": prop, @"subtitle": key};
 }
 
 - (NSDictionary *) transitionDescriptionForIndexPath:(NSIndexPath *)indexPath {
@@ -157,6 +152,9 @@
 }
 
 - (IBAction)unwindFromAction:(UIStoryboardSegue *)sender {
+    ZIKTransitionViewController *t = (ZIKTransitionViewController *)sender.sourceViewController;
+    self.device = t.device;
+    [self.tableView reloadData];
 }
 
 
