@@ -45,7 +45,6 @@
     }
     
     NSString *encodedParamsString = [[encodedParams componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"%@", encodedParamsString);
     return encodedParamsString;
 }
 

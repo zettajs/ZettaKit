@@ -33,9 +33,10 @@
 - (void) generateUI {
     int iteration = 1;
     for (NSDictionary *field in self.transition.fields) {
-        float height = 60.0;
+        float height = 30.0;
         float width = 100.0;
-        float x = CGRectGetMidX(self.view.frame);
+        float mid = CGRectGetMidX(self.view.frame);
+        float x = mid - (mid / 4);
         float y = CGRectGetMidY(self.view.frame) + ((iteration - 1) * height);
         CGRect rect = CGRectMake(x, y, width, height);
         if ([field[@"type"] isEqualToString:@"hidden"]) {
@@ -47,7 +48,7 @@
         } else if ([self isTextBoxType:field[@"type"]]) {
             UITextField *text = [[UITextField alloc] initWithFrame:rect];
             text.tag = iteration;
-            text.layer.borderWidth = 5.0f;
+            text.layer.borderWidth = 1.0f;
             text.layer.borderColor = [[UIColor grayColor] CGColor];
             [self.view addSubview:text];
             [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
