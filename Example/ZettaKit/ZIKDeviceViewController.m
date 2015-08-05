@@ -76,6 +76,7 @@
                                                alpha:1.0];
     
     NSDictionary *cellDescription = [self cellDescriptionForIndexPath:indexPath];
+    NSLog(@"%@", cellDescription);
     cell.textLabel.text = cellDescription[@"description"];
     if (cellDescription[@"subtitle"] != nil) {
         cell.detailTextLabel.text = cellDescription[@"subtitle"];
@@ -87,6 +88,12 @@
         cell.userInteractionEnabled = YES;
     } else {
         cell.userInteractionEnabled = NO;
+    }
+    
+    if (cellDescription[@"isStream"] != nil && ![cellDescription[@"isStream"]  isEqual: @0]) {
+        cell.userInteractionEnabled = YES;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     return cell;
 }
@@ -107,8 +114,16 @@
         // Get reference to the destination view controller
         ZIKTransitionViewController *vc = [segue destinationViewController];
         NSIndexPath *path = [self.tableView indexPathForSelectedRow];
+        
         vc.device = self.device;
-        vc.transition = self.device.transitions[path.row];
+        if (path.section == 1) {
+            vc.transition = self.device.transitions[path.row];
+            vc.stream = nil;
+        } else if (path.section == 0) {
+            vc.transition = nil;
+            NSArray *keys = [self.device.properties allKeys];
+            vc.stream = [self.device stream:keys[path.row]];
+        }
         // Pass any objects to the view controller here, like...
     }
     
@@ -137,7 +152,13 @@
     NSString *key = keys[indexPath.row];
     id prop = self.device.properties[key];
     NSString *stringProp = [NSString stringWithFormat:@"%@", prop];
-    return @{@"description": stringProp, @"subtitle": key};
+    NSNumber *num = @0;
+    for (ZIKLink *link in self.device.links) {
+        if (link.title != nil && [link.title isEqualToString:key]) {
+            num = @1;
+        }
+    }
+    return @{@"description": stringProp, @"subtitle": key, @"isStream": num};
 }
 
 - (NSDictionary *) transitionDescriptionForIndexPath:(NSIndexPath *)indexPath {

@@ -7,6 +7,7 @@
 //
 
 #import "ZIKTransitionViewController.h"
+#import "ZIKStreamEntry.h"
 
 @interface ZIKTransitionViewController ()
 
@@ -19,16 +20,40 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = self.transition.name;
-    if (self.transition.fields.count > 1) {
-        self.hasDataFields = YES;
-        self.fields = [[NSMutableArray alloc] init];
-    } else {
-        self.hasDataFields = NO;
+    
+    if (self.transition != nil) {
+        self.navigationItem.title = self.transition.name;
+        if (self.transition.fields.count > 1) {
+            self.hasDataFields = YES;
+            self.fields = [[NSMutableArray alloc] init];
+        } else {
+            self.hasDataFields = NO;
+        }
+        [self.timestamp removeFromSuperview];
+        [self.value removeFromSuperview];
+        [self.timestampLabel removeFromSuperview];
+        [self.valueLabel removeFromSuperview];
+        [self generateUI];
+    } else if(self.stream != nil) {
+        self.navigationItem.title = self.stream.title;
+        [self.stream.signal subscribeNext:^(ZIKStreamEntry *x) {
+            NSString *timestampEntry = [NSString stringWithFormat:@"%@", x.timestamp];
+            NSString *valueEntry = [NSString stringWithFormat:@"%@", x.data];
+            self.timestamp.text = timestampEntry;
+            self.value.text = valueEntry;
+        }];
+        [self.stream resume];
     }
-    [self generateUI];
 }
 
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        if (self.stream != nil) {
+            [self.stream stop];
+        }
+    }
+    [super viewWillDisappear:animated];
+}
 //Generate the UI for the particular action.
 - (void) generateUI {
     int iteration = 1;

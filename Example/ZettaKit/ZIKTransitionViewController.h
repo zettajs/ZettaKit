@@ -9,10 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "ZIKDevice.h"
 #import "ZIKTransition.h"
+#import "ZIKStream.h"
 
 @interface ZIKTransitionViewController : UIViewController
 
 @property (nonatomic, retain) ZIKDevice *device;
 @property (nonatomic, retain) ZIKTransition *transition;
+@property (nonatomic, retain) ZIKStream *stream;
+@property (nonatomic, retain) IBOutlet UILabel *value;
+@property (nonatomic, retain) IBOutlet UILabel *timestamp;
+@property (nonatomic, retain) IBOutlet UILabel *timestampLabel;
+@property (nonatomic, retain) IBOutlet UILabel *valueLabel;
 
 @end
