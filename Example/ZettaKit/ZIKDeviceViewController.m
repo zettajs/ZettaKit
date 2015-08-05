@@ -76,7 +76,6 @@
                                                alpha:1.0];
     
     NSDictionary *cellDescription = [self cellDescriptionForIndexPath:indexPath];
-    NSLog(@"%@", cellDescription);
     cell.textLabel.text = cellDescription[@"description"];
     if (cellDescription[@"subtitle"] != nil) {
         cell.detailTextLabel.text = cellDescription[@"subtitle"];
