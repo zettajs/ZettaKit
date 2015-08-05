@@ -37,7 +37,7 @@
         float width = 100.0;
         float mid = CGRectGetMidX(self.view.frame);
         float x = mid - (mid / 4);
-        float y = CGRectGetMidY(self.view.frame) + ((iteration - 1) * height);
+        float y = 150 + ((iteration - 1) * height);
         CGRect rect = CGRectMake(x, y, width, height);
         if ([field[@"type"] isEqualToString:@"hidden"]) {
             UIButton *button = [[UIButton alloc] initWithFrame:rect];
@@ -50,8 +50,22 @@
             text.tag = iteration;
             text.layer.borderWidth = 1.0f;
             text.layer.borderColor = [[UIColor grayColor] CGColor];
-            [self.view addSubview:text];
             [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
+            [self.view addSubview:text];
+        } else if ([field[@"type"] isEqualToString:@"checkbox"]) {
+            UISwitch *switchInput = [[UISwitch alloc] initWithFrame:rect];
+            switchInput.tag = iteration;
+            [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
+            [self.view addSubview:switchInput];
+        } else if ([field[@"type"] isEqualToString:@"radio"]) {
+            UISegmentedControl *segment = [[UISegmentedControl alloc] initWithFrame:rect];
+            int i = 0;
+            for (NSDictionary *value in field[@"value"]) {
+                [segment insertSegmentWithTitle:value[@"value"] atIndex:i animated:NO];
+                i++;
+            }
+            [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"], @"value": field[@"value"]}];
+            [self.view addSubview:segment];
         }
         iteration++;
     }
@@ -69,14 +83,22 @@
             NSString *type = (NSString *)field[@"type"];
             NSString *name = (NSString *)field[@"name"];
             NSNumber *tag = (NSNumber *)field[@"tag"];
+
             if ([self isTextBoxType:type]) {
                 UITextField *textField = (UITextField *)[self.view viewWithTag:[tag integerValue]];
                 NSString *text = textField.text;
                 [dict setObject:text forKey:name];
+            } else if([type isEqualToString:@"checkbox"]) {
+                UISwitch *switchInput = (UISwitch *)[self.view viewWithTag:[tag integerValue]];
+                BOOL switchState = switchInput.selected;
+                [dict setObject:[NSNumber numberWithBool:switchState] forKey:name];
+            } else if([type isEqualToString:@"radio"]) {
+                UISegmentedControl *segment = (UISegmentedControl *)[self.view viewWithTag:[tag integerValue]];
+                NSArray *value = (NSArray *)field[@"value"];
+                NSDictionary *selected = value[segment.selectedSegmentIndex];
+                [dict setObject:selected[@"value"] forKey:name];
             }
         }
-        
-        NSLog(@"%@", dict);
         
         [self.device transition:self.transition.name withArguments:dict andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{

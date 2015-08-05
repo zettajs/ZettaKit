@@ -136,7 +136,8 @@
     NSArray *keys = [self.device.properties allKeys];
     NSString *key = keys[indexPath.row];
     id prop = self.device.properties[key];
-    return @{@"description": prop, @"subtitle": key};
+    NSString *stringProp = [NSString stringWithFormat:@"%@", prop];
+    return @{@"description": stringProp, @"subtitle": key};
 }
 
 - (NSDictionary *) transitionDescriptionForIndexPath:(NSIndexPath *)indexPath {
