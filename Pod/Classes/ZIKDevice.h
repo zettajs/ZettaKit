@@ -54,6 +54,11 @@
 @property (nonatomic, retain, readonly) NSString *state;
 
 /**
+ The current properties of the device.
+ */
+@property (nonatomic, retain, readonly) NSDictionary *properties;
+
+/**
  The current available transitions for the device to take.
  */
 @property (nonatomic, retain, readonly) NSArray *transitions;

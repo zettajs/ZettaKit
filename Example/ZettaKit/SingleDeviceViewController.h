@@ -38,5 +38,6 @@
 @property (nonatomic, retain) IBOutlet UIButton *action;
 @property (nonatomic, retain) IBOutlet UITextView *stateScroller;
 
+- (IBAction)unwindFromAction:(id)sender;
 
 @end

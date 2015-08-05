@@ -44,7 +44,8 @@
         [encodedParams addObject:[NSString stringWithFormat:@"%@=%@", keyVal, valVal]];
     }
     
-    return [[encodedParams componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *encodedParamsString = [[encodedParams componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return encodedParamsString;
 }
 
 + (NSString *) generateRelForString:(NSString *)string {
