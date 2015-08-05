@@ -7,6 +7,7 @@
 //
 
 #import "ZIKTransitionViewController.h"
+#import "ZIKStreamEntry.h"
 
 @interface ZIKTransitionViewController ()
 
@@ -19,16 +20,40 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = self.transition.name;
-    if (self.transition.fields.count > 1) {
-        self.hasDataFields = YES;
-        self.fields = [[NSMutableArray alloc] init];
-    } else {
-        self.hasDataFields = NO;
+    
+    if (self.transition != nil) {
+        self.navigationItem.title = self.transition.name;
+        if (self.transition.fields.count > 1) {
+            self.hasDataFields = YES;
+            self.fields = [[NSMutableArray alloc] init];
+        } else {
+            self.hasDataFields = NO;
+        }
+        [self.timestamp removeFromSuperview];
+        [self.value removeFromSuperview];
+        [self.timestampLabel removeFromSuperview];
+        [self.valueLabel removeFromSuperview];
+        [self generateUI];
+    } else if(self.stream != nil) {
+        self.navigationItem.title = self.stream.title;
+        [self.stream.signal subscribeNext:^(ZIKStreamEntry *x) {
+            NSString *timestampEntry = [NSString stringWithFormat:@"%@", x.timestamp];
+            NSString *valueEntry = [NSString stringWithFormat:@"%@", x.data];
+            self.timestamp.text = timestampEntry;
+            self.value.text = valueEntry;
+        }];
+        [self.stream resume];
     }
-    [self generateUI];
 }
 
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        if (self.stream != nil) {
+            [self.stream stop];
+        }
+    }
+    [super viewWillDisappear:animated];
+}
 //Generate the UI for the particular action.
 - (void) generateUI {
     int iteration = 1;
@@ -37,7 +62,7 @@
         float width = 100.0;
         float mid = CGRectGetMidX(self.view.frame);
         float x = mid - (mid / 4);
-        float y = CGRectGetMidY(self.view.frame) + ((iteration - 1) * height);
+        float y = 150 + ((iteration - 1) * height);
         CGRect rect = CGRectMake(x, y, width, height);
         if ([field[@"type"] isEqualToString:@"hidden"]) {
             UIButton *button = [[UIButton alloc] initWithFrame:rect];
@@ -50,8 +75,22 @@
             text.tag = iteration;
             text.layer.borderWidth = 1.0f;
             text.layer.borderColor = [[UIColor grayColor] CGColor];
-            [self.view addSubview:text];
             [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
+            [self.view addSubview:text];
+        } else if ([field[@"type"] isEqualToString:@"checkbox"]) {
+            UISwitch *switchInput = [[UISwitch alloc] initWithFrame:rect];
+            switchInput.tag = iteration;
+            [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"]}];
+            [self.view addSubview:switchInput];
+        } else if ([field[@"type"] isEqualToString:@"radio"]) {
+            UISegmentedControl *segment = [[UISegmentedControl alloc] initWithFrame:rect];
+            int i = 0;
+            for (NSDictionary *value in field[@"value"]) {
+                [segment insertSegmentWithTitle:value[@"value"] atIndex:i animated:NO];
+                i++;
+            }
+            [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"], @"value": field[@"value"]}];
+            [self.view addSubview:segment];
         }
         iteration++;
     }
@@ -69,14 +108,22 @@
             NSString *type = (NSString *)field[@"type"];
             NSString *name = (NSString *)field[@"name"];
             NSNumber *tag = (NSNumber *)field[@"tag"];
+
             if ([self isTextBoxType:type]) {
                 UITextField *textField = (UITextField *)[self.view viewWithTag:[tag integerValue]];
                 NSString *text = textField.text;
                 [dict setObject:text forKey:name];
+            } else if([type isEqualToString:@"checkbox"]) {
+                UISwitch *switchInput = (UISwitch *)[self.view viewWithTag:[tag integerValue]];
+                BOOL switchState = switchInput.selected;
+                [dict setObject:[NSNumber numberWithBool:switchState] forKey:name];
+            } else if([type isEqualToString:@"radio"]) {
+                UISegmentedControl *segment = (UISegmentedControl *)[self.view viewWithTag:[tag integerValue]];
+                NSArray *value = (NSArray *)field[@"value"];
+                NSDictionary *selected = value[segment.selectedSegmentIndex];
+                [dict setObject:selected[@"value"] forKey:name];
             }
         }
-        
-        NSLog(@"%@", dict);
         
         [self.device transition:self.transition.name withArguments:dict andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{
