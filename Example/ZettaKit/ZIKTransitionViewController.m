@@ -85,10 +85,12 @@
         } else if ([field[@"type"] isEqualToString:@"radio"]) {
             UISegmentedControl *segment = [[UISegmentedControl alloc] initWithFrame:rect];
             int i = 0;
+            segment.tag = iteration;
             for (NSDictionary *value in field[@"value"]) {
                 [segment insertSegmentWithTitle:value[@"value"] atIndex:i animated:NO];
                 i++;
             }
+            [segment setSelectedSegmentIndex:1];
             [self.fields addObject:@{@"name": field[@"name"], @"tag":[NSNumber numberWithInt:iteration], @"type": field[@"type"], @"value": field[@"value"]}];
             [self.view addSubview:segment];
         }
