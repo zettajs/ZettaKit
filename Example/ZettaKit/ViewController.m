@@ -52,7 +52,7 @@
 
     
     self._servers = [[NSMutableArray alloc] init];
-    NSURL *url = [NSURL URLWithString:@"http://zetta-cloud-2.herokuapp.com/"];
+    NSURL *url = [NSURL URLWithString:self.apiEndpoint];
     ZIKSession *session = [ZIKSession sharedSession];
     RACSignal *root = [session root:url];
     self.serverSignal = [session servers:root];

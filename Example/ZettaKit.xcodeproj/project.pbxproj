@@ -32,6 +32,7 @@
 		F5234B3D1ADD9D2B002CEC4F /* SingleDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B391ADD9D2B002CEC4F /* SingleDeviceViewController.m */; };
 		F5234B3E1ADD9D2B002CEC4F /* DeviceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */; };
 		F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */; };
+		F5B64E8B1B87860C004A556D /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B64E8A1B87860C004A556D /* EndpointViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,8 @@
 		F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceTableViewController.m; sourceTree = "<group>"; };
 		F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKDeviceTests.m; sourceTree = "<group>"; };
 		F5925CE71B2B22C900F71766 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		F5B64E891B87860C004A556D /* EndpointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
+		F5B64E8A1B87860C004A556D /* EndpointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +176,8 @@
 				F50A80631B345E7400914F91 /* ZIKDeviceViewController.m */,
 				F50A80651B34817F00914F91 /* ZIKTransitionViewController.h */,
 				F50A80661B34817F00914F91 /* ZIKTransitionViewController.m */,
+				F5B64E891B87860C004A556D /* EndpointViewController.h */,
+				F5B64E8A1B87860C004A556D /* EndpointViewController.m */,
 			);
 			path = ZettaKit;
 			sourceTree = "<group>";
@@ -397,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5B64E8B1B87860C004A556D /* EndpointViewController.m in Sources */,
 				F50A80671B34817F00914F91 /* ZIKTransitionViewController.m in Sources */,
 				6003F59E195388D20070C39A /* ZIKAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* ZIKViewController.m in Sources */,

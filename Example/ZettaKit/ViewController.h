@@ -28,7 +28,7 @@
 
 @interface ViewController : UITableViewController
 
-
+@property (nonatomic, retain) NSString *apiEndpoint;
 
 @end
 
