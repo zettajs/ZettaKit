@@ -6,6 +6,9 @@ SpecBegin(ZIKDevice)
 NSDictionary *properties = @{@"id": @"a2f62fda-4a8c-4433-ac49-721ffac92ce4",
                              @"type": @"led",
                              @"state": @"off"};
+
+NSDictionary *sensorProperties = @{@"id": @"a2f62fda-4a8c-4433-ac49-721ffac92ce4",
+                             @"type": @"photocell"};
 NSArray *links = @[
                        @{
                            @"rel": @[ @"self"],
@@ -33,24 +36,37 @@ NSArray *actions = @[@{
                               @"fields": @[ @{ @"name": @"action", @"type": @"hidden", @"value": @"turn-on" } ]
                         }];
 ;
-NSDictionary *data = @{@"properties": properties, @"links": links, @"actions": actions};
+
+NSDictionary *actuator = @{@"properties": properties, @"links": links, @"actions": actions};
+NSDictionary *sensor = @{@"actions": @[], @"links": links, @"properties": sensorProperties};
+
 
 describe(@"ZIKDevice", ^{
     describe(@"Initialization", ^{
         it(@"Can be initialized with a dictionary", ^{
-            ZIKDevice *device = [ZIKDevice initWithDictionary:data];
+            ZIKDevice *device = [ZIKDevice initWithDictionary:actuator];
             expect(device.uuid).to.equal(@"a2f62fda-4a8c-4433-ac49-721ffac92ce4");
             expect(device.type).to.equal(@"led");
             expect(device.state).to.equal(@"off");
+            expect(device.name).to.equal(nil);
+            expect(device.transitions.count).to.equal(@1);
+            expect(device.links.count).to.equal(@4);
         });
         
         it(@"Can be initialized with another dictionary method", ^{
-            ZIKDevice *device = [[ZIKDevice alloc] initWithDictionary:data];
+            ZIKDevice *device = [[ZIKDevice alloc] initWithDictionary:actuator];
             expect(device.uuid).to.equal(@"a2f62fda-4a8c-4433-ac49-721ffac92ce4");
             expect(device.type).to.equal(@"led");
             expect(device.state).to.equal(@"off");
         });
         
+        it(@"Can be initialized with a dictionary when a sensor", ^{
+            ZIKDevice *device = [ZIKDevice initWithDictionary:sensor];
+            expect(device.uuid).to.equal(@"a2f62fda-4a8c-4433-ac49-721ffac92ce4");
+            expect(device.type).to.equal(@"photocell");
+            expect(device.state).to.equal(nil);
+            expect(device.name).to.equal(nil);
+        });
         
     });
 });

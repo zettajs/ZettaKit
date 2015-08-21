@@ -80,9 +80,18 @@
     if ([data objectForKey:@"properties"] != nil) {
         self.properties = [data objectForKey:@"properties"];
         self.type = self.properties[@"type"];
-        self.name = self.properties[@"name"];
         self.uuid = self.properties[@"id"];
-        self.state = self.properties[@"state"];
+        if (self.properties[@"name"] != nil) {
+            self.name = self.properties[@"name"];
+        } else {
+            self.name = nil;
+        }
+        
+        if (self.properties[@"state"] != nil) {
+            self.state = self.properties[@"state"];
+        } else {
+            self.state = nil;
+        }
     }
     
     if ([data objectForKey:@"links"] != nil) {
