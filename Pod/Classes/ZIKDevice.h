@@ -41,7 +41,7 @@
 /**
  The current human readable name of the `ZIKDevice` in the API. If not nil this should be used when displaying things to a user.
  */
-@property (nonatomic, retain, readonly) NSString *name;
+@property (nonatomic, retain, readonly, nullable) NSString *name;
 
 /**
  The type of device. Classifies a device based on what it physically is.
