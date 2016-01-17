@@ -19,5 +19,5 @@ Pod::Spec.new do |s|
     'ZettaKit' => ['Pod/Assets/*.png']
   }
   s.dependency 'ReactiveCocoa', '2.4.7'
-  s.dependency 'SocketRocket', '0.3.1-beta2'
+  s.dependency 'SocketRocket', '0.4'
 end
