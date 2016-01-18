@@ -37,7 +37,7 @@
 
 @property (nonatomic, retain, readwrite) NSString *uuid;
 @property (nonatomic, retain, readwrite) NSString *type;
-@property (nonatomic, retain, readwrite) NSString *name;
+@property (nonatomic, retain, readwrite, nullable) NSString *name;
 @property (nonatomic, retain, readwrite) NSString *state;
 @property (nonatomic, retain, readwrite) NSDictionary *properties;
 @property (nonatomic, retain, readwrite) NSArray *transitions;
@@ -81,7 +81,7 @@
         self.properties = [data objectForKey:@"properties"];
         self.type = self.properties[@"type"];
         self.uuid = self.properties[@"id"];
-        if (self.properties[@"name"] != nil) {
+        if (self.properties[@"name"] != nil && self.properties[@"name"] != [NSNull null]) {
             self.name = self.properties[@"name"];
         } else {
             self.name = nil;
