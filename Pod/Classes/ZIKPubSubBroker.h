@@ -24,7 +24,7 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <ISpdy/ispdy.h>
+#import "include/ispdy.h"
 
 /**
  The `ZIKPubSubBroker` object represents a the reciever for SPDY push streams.

@@ -24,7 +24,7 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <ISpdy/ispdy.h>
+#import "include/ispdy.h"
 
 /**
  The `ZIKSpdyDelegate` implements a way of performing HTTP transactions over the SPDY protocol.

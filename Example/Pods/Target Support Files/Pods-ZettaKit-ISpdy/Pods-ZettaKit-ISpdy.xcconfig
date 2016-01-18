@@ -1,1 +1,0 @@
-PODS_ZETTAKIT_ISPDY_OTHER_LDFLAGS = -l"z" -framework "CoreFoundation" -framework "Security"

@@ -3,8 +3,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'ZettaKit', :exclusive => true do
   pod "ZettaKit", :path => "../"
   pod 'ReactiveCocoa', '2.4.7'
-  pod 'SocketRocket', '0.3.1-beta2'
-  pod 'ISpdy', :git => 'https://github.com/mdobson/iSPDY.git'
+  pod 'SocketRocket', '0.4'
 end
 
 target 'Tests', :exclusive => true do
