@@ -30,5 +30,6 @@
     "SocketRocket": [
       "0.4"
     ]
-  }
+  },
+  "libraries": "z"
 }

@@ -20,4 +20,5 @@ Pod::Spec.new do |s|
   }
   s.dependency 'ReactiveCocoa', '2.4.7'
   s.dependency 'SocketRocket', '0.4'
+  s.libraries = 'z'
 end

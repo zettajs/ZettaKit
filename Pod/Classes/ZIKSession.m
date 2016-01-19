@@ -33,7 +33,7 @@
 #import "ZIKSpdyDelegate.h"
 #import "ZIKPubSubBroker.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
-#import "include/ispdy.h"
+#import "ispdy.h"
 
 @interface ZIKSession()
 

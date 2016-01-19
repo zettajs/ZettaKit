@@ -32,7 +32,7 @@
 #import "ZIKLogStreamEntry.h"
 #import "ZIKSpdyDelegate.h"
 #import "ZIKPubSubBroker.h"
-#import "include/ispdy.h"
+#import "ispdy.h"
 
 @interface ZIKStream () <SRWebSocketDelegate>
 
