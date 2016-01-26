@@ -26,7 +26,7 @@
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKQuery.h"
-#import <ISpdy/ispdy.h>
+#import "ispdy.h"
 
 /**
  The `ZIKSession` class manages most API transactions that take place with the Zetta HTTP API. It uses reactive programming to provide a robust model of API traversal and filtering.
