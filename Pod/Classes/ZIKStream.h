@@ -43,6 +43,11 @@
  */
 @property (nonatomic, retain, readonly) RACSignal *signal;
 
+/**
+ Boolean flag indicating if the socket is a multiplexed websocket stream.
+ */
+@property (nonatomic, readonly) BOOL multiplexed;
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------
@@ -57,13 +62,23 @@
 + (instancetype) initWithDictionary:(NSDictionary *)data;
 
 /**
- Initializes a `ZIKStream` with the specified siren document in `NSDictionary` form.
+ Initializes a multiplexed capable `ZIKStream` with the specified siren document in `NSDictionary` form.
  
  @param data The base siren document to create the stream with.
  
  @return The newly-initialized `ZIKStream` object.
  */
-- (instancetype) initWithDictionary:(NSDictionary *)data;
++ (instancetype) initMultiplexedSocketWithDictionary:(NSDictionary *)data;
+
+/**
+ Initializes a `ZIKStream` with the specified siren document in `NSDictionary` form.
+ 
+ @param data The base siren document to create the stream with.
+ @param multiplexed A flag indicating whether or not a stream is a multiplexed websocket stream.
+ 
+ @return The newly-initialized `ZIKStream` object.
+ */
+- (instancetype) initWithDictionary:(NSDictionary *)data andIsMultiplex:(BOOL)multiplexed;
 
 /**
  Initializes a `ZIKStream` with the specified siren document in `ZIKLink` form.
@@ -83,7 +98,7 @@
  
  @return The newly-initialized `ZIKStream` object.
  */
-- (id) initWithLink:(ZIKLink *)link;
+- (instancetype) initWithLink:(ZIKLink *)link andIsMultiplex:(BOOL)multiplexed;
 
 ///---------------------------
 /// @name Stream control
@@ -98,5 +113,19 @@
  End the flow of data from the stream.
  */
 - (void) stop;
+
+- (BOOL) isOpen;
+
+
+- (void) subscribe:(NSString *)topic;
+
+- (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit;
+
+- (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit andQl:(NSString *)ql;
+
+- (void) subscribe:(NSString *)topic withQl:(NSString*)ql;
+
+- (void) unsubscribe:(NSString *)topic;
+
 
 @end

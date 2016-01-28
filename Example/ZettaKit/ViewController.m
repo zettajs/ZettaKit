@@ -32,6 +32,7 @@
 #import "ZIKRoot.h"
 #import "ZIKSession.h"
 #import "ZIKStreamEntry.h"
+#import "ZIKMultiplexStreamEntry.h"
 
 @interface ViewController ()
     @property (nonatomic, retain) NSMutableArray *_servers;
@@ -66,6 +67,22 @@
         dispatch_async(dispatch_get_main_queue(), ^{
           [self.tableView reloadData];
         });
+    }];
+    
+
+    [root subscribeNext:^(ZIKRoot *x) {
+        _stream = [x multiplexWebsocketStream];
+        [_stream resume];
+        NSLog(@"%@", _stream);
+        [_stream.signal subscribeNext:^(ZIKMultiplexStreamEntry *x) {
+            NSLog(@"%@", x);
+        }];
+        while (1) {
+            if ([_stream isOpen]) {
+                [_stream subscribe:@"**/**"];
+                break;
+            }
+        }
     }];
     
 }

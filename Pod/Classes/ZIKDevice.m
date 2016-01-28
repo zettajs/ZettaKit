@@ -69,7 +69,7 @@
     NSArray *filteredStreams = [self.streams filteredArrayUsingPredicate:pred];
     if ([filteredStreams count] != 0) {
         ZIKLink *entry = filteredStreams[0];
-        return [[ZIKStream alloc] initWithLink:entry];
+        return [ZIKStream initWithLink:entry];
     } else {
         return nil;
     }

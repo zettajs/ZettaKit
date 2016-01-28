@@ -32,6 +32,7 @@
 #import "ZIKLogStreamEntry.h"
 #import "ZIKSpdyDelegate.h"
 #import "ZIKPubSubBroker.h"
+#import "ZIKMultiplexStreamEntry.h"
 #import "ispdy.h"
 
 @interface ZIKStream () <SRWebSocketDelegate>
@@ -42,21 +43,31 @@
 @property (nonatomic) BOOL flowing;
 @property (nonatomic, retain, readwrite) NSString *title;
 @property (nonatomic, retain, readwrite) RACSignal *signal;
+@property (nonatomic, readwrite) BOOL multiplexed;
 
 @end
 
 @implementation ZIKStream {
     SRWebSocket *_socket;
+    NSMutableDictionary *_subscriptions;
+    NSMutableArray *_pending;
 }
 
 + (instancetype) initWithDictionary:(NSDictionary *)data {
-    return [[ZIKStream alloc] initWithDictionary:data];
+    return [[ZIKStream alloc] initWithDictionary:data andIsMultiplex:NO];
+}
+
++ (instancetype) initMultiplexedSocketWithDictionary:(NSDictionary *)data {
+    return [[ZIKStream alloc] initWithDictionary:data andIsMultiplex:YES];
 }
 
 
-
-- (instancetype) initWithDictionary:(NSDictionary *)data {
+- (instancetype) initWithDictionary:(NSDictionary *)data andIsMultiplex:(BOOL)multiplexed {
     if (self = [super init]) {
+        self.multiplexed = multiplexed;
+        if(self.multiplexed == YES) {
+            _subscriptions = [[NSMutableDictionary alloc] init];
+        }
         if ([data objectForKey:@"title"]) {
             self.title = data[@"title"];
         }
@@ -87,11 +98,12 @@
 }
 
 + (instancetype) initWithLink:(ZIKLink *)link {
-    return [[ZIKStream alloc] initWithLink:link];
+    return [[ZIKStream alloc] initWithLink:link andIsMultiplex:NO];
 }
 
-- (id) initWithLink:(ZIKLink *)link {
+- (instancetype) initWithLink:(ZIKLink *)link andIsMultiplex:(BOOL)multiplexed {
     if (self = [super init]) {
+        self.multiplexed = multiplexed;
         self.title = link.title;
         self.url = link.href;
         self.flowing = NO;
@@ -143,11 +155,33 @@
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     if (self.subscriber != nil) {
         NSString *messageData = (NSString *)message;
-        NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[messageData dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-        if ([self.title isEqualToString:@"logs"]) {
-            [self.subscriber sendNext:[ZIKLogStreamEntry initWithDictionary:data]];
+        NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[messageData dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+        if (self.multiplexed) {
+            NSLog(@"Data from socket: %@", data);
+            ZIKMultiplexStreamEntry *entry = [ZIKMultiplexStreamEntry initWithDictionary:data];
+            if ([entry.type isEqualToString:@"error"]) {
+                NSError *error = [[NSError alloc] initWithDomain:@"org.zettakit" code:[entry.code integerValue] userInfo:@{@"message": entry.message}];
+                [self.subscriber sendNext:entry];
+                [self.subscriber sendError:error];
+            } else if ([entry.type isEqualToString:@"subscribe-ack"]) {
+                NSString *topic = entry.topic;
+                NSString *subscriptionId = entry.subscriptionId;
+                [_pending removeObject:topic];
+                _subscriptions[topic] = subscriptionId;
+                [self.subscriber sendNext:entry];
+            } else if ([entry.type isEqualToString:@"unsubscribe-ack"]) {
+                NSString *topic = entry.topic;
+                [_subscriptions removeObjectForKey:topic];
+                [self.subscriber sendNext:entry];
+            } else if ([entry.type isEqualToString:@"data"]) {
+                [self.subscriber sendNext:entry];
+            }
         } else {
-            [self.subscriber sendNext:[ZIKStreamEntry initWithDictionary:data]];
+            if ([self.title isEqualToString:@"logs"]) {
+                [self.subscriber sendNext:[ZIKLogStreamEntry initWithDictionary:data]];
+            } else {
+                [self.subscriber sendNext:[ZIKStreamEntry initWithDictionary:data]];
+            }
         }
     } else {
         NSLog(@"Subscriber is nil");
@@ -175,8 +209,61 @@
     }
 }
 
+- (void) subscribe:(NSString *)topic {
+    NSDictionary *data = @{ @"type": @"subscribe", @"topic": topic};
+    [self subscribeWithObject:data];
+}
+
+- (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit {
+    NSDictionary *data = @{ @"type": @"subscribe", @"topic": topic, @"limit": limit};
+    [self subscribeWithObject:data];
+}
+
+- (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit andQl:(NSString *)ql {
+    NSString *fullTopic = [NSString stringWithFormat:@"%@?%@", topic, ql];
+    NSDictionary *data = @{ @"type": @"subscribe", @"topic": fullTopic, @"limit": limit};
+    [self subscribeWithObject:data];
+}
+
+- (void) subscribe:(NSString *)topic withQl:(NSString*)ql {
+    NSString *fullTopic = [NSString stringWithFormat:@"%@?%@", topic, ql];
+    NSDictionary *data = @{ @"type": @"subscribe", @"topic": fullTopic};
+    [self subscribeWithObject:data];
+}
+
+- (void) unsubscribe:(NSString *)topic {
+    NSString *subscriptionId = [self subscriptionIdForTopic:topic];
+    NSDictionary *data = @{@"type": @"unsubscribe", @"subscriptionId": subscriptionId};
+    [self subscribeWithObject:data];
+}
+
+- (void) subscribeWithObject:(NSDictionary *)data {
+    if (self.multiplexed) {
+        NSLog(@"Data %@", data);
+        [_pending addObject:data[@"topic"]];
+        NSLog(@"Pending added");
+        [self write:data];
+    }
+}
+
+- (NSString *) subscriptionIdForTopic:(NSString *) topic {
+    return _subscriptions[topic];
+}
+
+- (void) write:(NSDictionary *)data {
+    NSError *error = nil;
+    NSData *serializedData = [NSJSONSerialization dataWithJSONObject:data options:kNilOptions error:&error];
+    NSString *subscriptionString = [[NSString alloc] initWithData:serializedData encoding:NSUTF8StringEncoding];
+    NSLog(@"%@", subscriptionString);
+    [_socket send:subscriptionString];
+}
+
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<ZIKStream: %@>", self.title];
+    return [NSString stringWithFormat:@"<ZIKStream: %@>", self.url];
+}
+
+- (BOOL) isOpen {
+    return _socket.readyState == SR_OPEN;
 }
 
 @end
