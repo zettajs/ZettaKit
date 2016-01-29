@@ -173,4 +173,18 @@
     
 }
 
+- (NSArray *)streams {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTAINS %@", @"http://rels.zettajs.io/monitor"];
+    NSArray *filteredStreams = [self.links filteredArrayUsingPredicate:pred];
+    NSMutableArray *streams = [[NSMutableArray alloc] init];
+    if ([filteredStreams count] != 0) {
+        for (ZIKLink *link in filteredStreams) {
+            ZIKStream *stream = [[ZIKStream alloc] initWithLink:link andIsMultiplex:NO];
+            [streams addObject:stream];
+        }
+        
+    }
+    return streams;
+}
+
 @end

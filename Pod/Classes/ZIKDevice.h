@@ -143,9 +143,16 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  Perform a transition with extra arguments.
  
  @param name The name of the transition to execute.
-  @param args The `NSDictionary` of key value pairs representing arguments to be given to the transition.
+ @param args The `NSDictionary` of key value pairs representing arguments to be given to the transition.
  @param block A block object to be executed when the task finishes. This block has no return value and takes two arguments: Any error from attempting to complete the task, the new device representation from the completed task.
  */
 - (void) transition:(NSString *)name withArguments:(NSDictionary *)args andCompletion:(CompletionBlock)block;
+
+/**
+ Retrieve all streams attached to a device.
+ 
+ @return An NSArray of ZIKStream instances that correspond to every stream on the device representation.
+ */
+- (NSArray *)streams;
 
 @end

@@ -114,17 +114,50 @@
  */
 - (void) stop;
 
+/**
+ Method to indicate whether or not the websocket is currently open.
+ 
+ @return BOOL indicating if underlying websocket is open.
+ */
 - (BOOL) isOpen;
 
-
+/**
+ Create a subscription for using a topic.
+ 
+ @param An NSString containing a topic pattern for subscription.
+ */
 - (void) subscribe:(NSString *)topic;
 
+/**
+ Create a subscription for using a topic.
+ 
+ @param An NSString containing a topic pattern for subscription.
+ @param An NSNumber containing a limit of messages to be sent for the subscription.
+ */
 - (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit;
 
+/**
+ Create a subscription for using a topic.
+ 
+ @param An NSString containing a topic pattern for subscription.
+ @param An NSNumber containing a limit of messages to be sent for the subscription.
+ @param An NSString with query language to filter messages on.
+ */
 - (void) subscribe:(NSString *)topic withLimit:(NSNumber*)limit andQl:(NSString *)ql;
 
+/**
+ Create a subscription for using a topic.
+ 
+ @param An NSString containing a topic pattern for subscription.
+ @param An NSString with query language to filter messages on.
+ */
 - (void) subscribe:(NSString *)topic withQl:(NSString*)ql;
 
+/**
+ Unsubscribe from a given topic.
+ 
+ @param An NSString containing a topic pattern for subscription.
+ */
 - (void) unsubscribe:(NSString *)topic;
 
 

@@ -65,6 +65,11 @@
  */
 - (instancetype) initWithDictionary:(NSDictionary *)data;
 
+/**
+ Creates a writable multiplexed websocket stream.
+ 
+ @return A writable ZIKStream that can take subscribe and unsubscribe messages.
+ */
 - (ZIKStream *) multiplexWebsocketStream;
 
 
