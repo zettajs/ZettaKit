@@ -157,7 +157,6 @@
         NSString *messageData = (NSString *)message;
         NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[messageData dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
         if (self.multiplexed) {
-            NSLog(@"Data from socket: %@", data);
             ZIKMultiplexStreamEntry *entry = [ZIKMultiplexStreamEntry initWithDictionary:data];
             if ([entry.type isEqualToString:@"error"]) {
                 NSError *error = [[NSError alloc] initWithDomain:@"org.zettakit" code:[entry.code integerValue] userInfo:@{@"message": entry.message}];
@@ -239,9 +238,7 @@
 
 - (void) subscribeWithObject:(NSDictionary *)data {
     if (self.multiplexed) {
-        NSLog(@"Data %@", data);
         [_pending addObject:data[@"topic"]];
-        NSLog(@"Pending added");
         [self write:data];
     }
 }

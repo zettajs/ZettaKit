@@ -12,6 +12,8 @@
 
 @property (nonatomic, retain, readwrite) NSString *subscriptionId;
 @property (nonatomic, retain, readwrite) NSString *type;
+@property (nonatomic, retain, readwrite) NSNumber *code;
+@property (nonatomic, retain, readwrite) NSString *message;
 
 @end
 
@@ -29,6 +31,14 @@
         
         if (data[@"type"]) {
             self.type = data[@"type"];
+        }
+        
+        if (data[@"message"]) {
+            self.message = data[@"message"];
+        }
+        
+        if (data[@"code"]) {
+            self.code = data[@"code"];
         }
     }
     return self;

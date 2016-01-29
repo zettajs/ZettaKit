@@ -79,7 +79,7 @@
         }];
         while (1) {
             if ([_stream isOpen]) {
-                [_stream subscribe:@"**/**"];
+                [_stream subscribe:@"*"];
                 break;
             }
         }
