@@ -23,6 +23,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 #import <Foundation/Foundation.h>
+#import "ZIKStream.h"
 
 /**
  The `ZIKRoot` class is responsible for representing the entry point into a Zetta HTTP API.
@@ -63,6 +64,13 @@
  @return The newly-initialized `ZIKRoot` object.
  */
 - (instancetype) initWithDictionary:(NSDictionary *)data;
+
+/**
+ Creates a writable multiplexed websocket stream.
+ 
+ @return A writable ZIKStream that can take subscribe and unsubscribe messages.
+ */
+- (ZIKStream *) multiplexWebsocketStream;
 
 
 @end

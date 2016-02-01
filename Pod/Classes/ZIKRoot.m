@@ -68,4 +68,15 @@
     return [NSString stringWithFormat:@"<ZIKRoot: %@>", self.href];
 }
 
+- (ZIKStream *) multiplexWebsocketStream {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTAINS %@", @"http://rels.zettajs.io/events"];
+    NSArray *filteredStreams = [self.links filteredArrayUsingPredicate:pred];
+    if ([filteredStreams count] != 0) {
+        ZIKLink *entry = filteredStreams[0];
+        return [[ZIKStream alloc] initWithLink:entry andIsMultiplex:YES];
+    } else {
+        return nil;
+    }
+}
+
 @end
