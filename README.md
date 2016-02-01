@@ -31,7 +31,6 @@ RACSignal *devices = [session devices:servers];
 }];
 
 ```
-
 ## Requirements
 
 This library requires the following components
@@ -39,7 +38,6 @@ This library requires the following components
 * `'ReactiveCocoa'@'2.4.7'`
 * `'SocketRocket'@'0.3.1-beta2'`
  
-
 ## Installation
 
 ZettaKit is available through [CocoaPods](http://cocoapods.org). To install
