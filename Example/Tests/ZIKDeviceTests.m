@@ -69,6 +69,14 @@ describe(@"ZIKDevice", ^{
         });
         
     });
+    
+    describe(@"streams", ^{
+        it(@"Will return all streams that can be subscribed to.", ^{
+            ZIKDevice *device = [ZIKDevice initWithDictionary:actuator];
+            NSArray *streams = [device streams];
+            expect([streams count]).to.equal(2);
+        });
+    });
 });
 
 SpecEnd
