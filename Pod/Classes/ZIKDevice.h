@@ -68,7 +68,7 @@
  */
 @property (nonatomic, retain, readonly, nonnull) NSArray *links;
 
-typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
+typedef void (^CompletionBlock)(NSError * _Nullable err, ZIKDevice * _Nullable device);
 
 ///---------------------------
 /// @name Initialization
@@ -83,7 +83,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  
  @return The newly-initialized `ZIKDevice` object.
  */
-+ (instancetype) initWithDictionary:(NSDictionary *)data;
++ (instancetype _Nonnull) initWithDictionary:(NSDictionary * _Nonnull)data;
 
 /**
  Initializes a `ZIKDevice` with the specified siren document in `NSDictionary` form.
@@ -92,7 +92,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  
  @return The newly-initialized ZIKDevice object.
  */
-- (id) initWithDictionary:(NSDictionary *)data;
+- (instancetype _Nonnull) initWithDictionary:(NSDictionary * _Nonnull)data;
 
 ///---------------------------
 /// @name Interacting with streaming data
@@ -105,7 +105,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  
  @return The newly initialized ZIKStream
  */
-- (ZIKStream *) stream:(NSString*) name;
+- (ZIKStream * _Nullable) stream:(NSString* _Nonnull) name;
 
 ///---------------------------
 /// @name Interacting with state machine models
@@ -118,7 +118,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  
  @return An RACSignal object that can be subscribed to and operated on. The observable subscribe to ZIKDevice instances.
  */
-- (RACSignal *) transition:(NSString *) name;
+- (RACSignal * _Nonnull) transition:(NSString * _Nullable) name;
 
 /**
  Perform an argumentless state transition on an object. This will simply send a transition call to the API without any extra data.
@@ -127,7 +127,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  @param block A block object to be executed when the task finishes. This block has no return value and takes two arguments: Any error from attempting to complete the task, the new device representation from the completed task.
  
  */
-- (void) transition:(NSString *) name andCompletion:(CompletionBlock)block;
+- (void) transition:(NSString * _Nonnull) name andCompletion:(CompletionBlock _Nonnull)block;
 
 /**
  Perform a transition with extra arguments. This particular method is a fire and forget method. No indication of completion will be given.
@@ -137,7 +137,7 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  
  @return An RACSignal object that can be subscribed to and operated on. The observable subscribe to ZIKDevice instances.
  */
-- (RACSignal *) transition:(NSString *) name withArguments:(NSDictionary *)args;
+- (RACSignal * _Nonnull) transition:(NSString * _Nonnull) name withArguments:(NSDictionary * _Nonnull)args;
 
 /**
  Perform a transition with extra arguments.
@@ -146,13 +146,13 @@ typedef void (^CompletionBlock)(NSError *err, ZIKDevice *device);
  @param args The `NSDictionary` of key value pairs representing arguments to be given to the transition.
  @param block A block object to be executed when the task finishes. This block has no return value and takes two arguments: Any error from attempting to complete the task, the new device representation from the completed task.
  */
-- (void) transition:(NSString *)name withArguments:(NSDictionary *)args andCompletion:(CompletionBlock)block;
+- (void) transition:(NSString * _Nonnull)name withArguments:(NSDictionary * _Nonnull)args andCompletion:(CompletionBlock _Nonnull)block;
 
 /**
  Retrieve all streams attached to a device.
  
  @return An NSArray of ZIKStream instances that correspond to every stream on the device representation.
  */
-- (NSArray *)streams;
+- (NSArray * _Nonnull)streams;
 
 @end
