@@ -347,8 +347,8 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     }
 }
 
-- (void) setHeaders:(NSDictionary *)headers {
-    [self.headers addEntriesFromDictionary:headers];
+- (void) setGlobalHeaders:(NSDictionary *)headers {
+    self.headers = [NSMutableDictionary dictionaryWithDictionary:headers];
 }
 
 - (void) setHeader:(NSString *)key forValue:(id)value {

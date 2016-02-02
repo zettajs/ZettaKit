@@ -174,7 +174,7 @@
 }
 
 - (NSArray *)streams {
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTAINS %@", @"http://rels.zettajs.io/monitor"];
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTAINS %@", @"monitor"];
     NSArray *filteredStreams = [self.links filteredArrayUsingPredicate:pred];
     NSMutableArray *streams = [[NSMutableArray alloc] init];
     if ([filteredStreams count] != 0) {

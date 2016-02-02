@@ -33,6 +33,7 @@
 		F5234B3E1ADD9D2B002CEC4F /* DeviceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5234B3B1ADD9D2B002CEC4F /* DeviceTableViewController.m */; };
 		F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F55650411ADEB13300EE2E2B /* ZIKDeviceTests.m */; };
 		F5B64E8B1B87860C004A556D /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B64E8A1B87860C004A556D /* EndpointViewController.m */; };
+		F5D382AA1C6128A500CCEB3E /* ZIKStreamTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D382A91C6128A500CCEB3E /* ZIKStreamTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		F5925CE71B2B22C900F71766 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		F5B64E891B87860C004A556D /* EndpointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
 		F5B64E8A1B87860C004A556D /* EndpointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
+		F5D382A91C6128A500CCEB3E /* ZIKStreamTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIKStreamTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 				F51C9A131AE01EAB004BC6FA /* ZIKLinkTests.m */,
 				F51C9A271AE0270E004BC6FA /* ZIKUtilTests.m */,
 				F51C9A291AE050A0004BC6FA /* ZIKTransitionTests.m */,
+				F5D382A91C6128A500CCEB3E /* ZIKStreamTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D382AA1C6128A500CCEB3E /* ZIKStreamTests.m in Sources */,
 				F51C9A281AE0270E004BC6FA /* ZIKUtilTests.m in Sources */,
 				F51C9A141AE01EAB004BC6FA /* ZIKLinkTests.m in Sources */,
 				F55650421ADEB13300EE2E2B /* ZIKDeviceTests.m in Sources */,
