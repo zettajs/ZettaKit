@@ -176,7 +176,7 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  
  @param headers An NSDictionary of key value pairs representing HTTP Headers.
  */
-- (void) setHeaders:(NSDictionary *)headers;
+- (void) setGlobalHeaders:(NSDictionary *)headers;
 
 /**
  Set a header that will be sent with every outgoing request.
