@@ -174,6 +174,10 @@
                 [self.subscriber sendNext:entry];
             } else if ([entry.type isEqualToString:@"data"]) {
                 [self.subscriber sendNext:entry];
+            } else {
+                NSError *error = [[NSError alloc] initWithDomain:@"org.zettakit" code:0 userInfo:@{@"message": @"Message missing type."}];
+                [self.subscriber sendNext:entry];
+                [self.subscriber sendError:error];
             }
         } else {
             if ([self.title isEqualToString:@"logs"]) {
