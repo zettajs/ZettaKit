@@ -26,6 +26,7 @@
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKQuery.h"
+#import "ZIKQueryResponse.h"
 #import "ispdy.h"
 
 /**
@@ -35,6 +36,7 @@
 
 typedef void (^ServerCompletionBlock)(NSError *error, ZIKServer *server);
 typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
+typedef void (^QueryResponseCompletionBlock)(NSError *error, ZIKQueryResponse *devices);
 
 /**
  The current endpoint the `ZIKSession` is targeting. All requests will be made against this endpoint unless specifically provided another URL.
@@ -129,6 +131,8 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
  @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and an `NSArray` of `ZIKDevice` objects that fullfil the query.
  */
 - (void) queryDevices:(NSArray *)queries withCompletion:(DevicesCompletionBlock)block;
+
+- (void) queryDevices:(ZIKQuery *)query withResponseCompletion:(QueryResponseCompletionBlock)block;
 
 /**
  Start an HTTP task over the Zetta API, and receive an observable for it.

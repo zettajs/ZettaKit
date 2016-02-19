@@ -1,6 +1,6 @@
 {
   "name": "ZettaKit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "summary": "A Reactive Hypermedia Client for the Zetta HTTP API.",
   "description": "This library allows you to harness the power of Reactive Programming to interact with the Zetta HTTP API.",
   "homepage": "https://github.com/zettajs/ZettaKit",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/zettajs/ZettaKit.git",
-    "tag": "0.0.3"
+    "tag": "0.0.4"
   },
   "social_media_url": "https://twitter.com/zettajs",
   "platforms": {
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "ReactiveCocoa": [
-      "2.4.7"
+      "4.0"
     ],
     "SocketRocket": [
       "0.4"

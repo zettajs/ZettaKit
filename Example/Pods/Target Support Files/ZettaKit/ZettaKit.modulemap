@@ -1,0 +1,6 @@
+framework module ZettaKit {
+  umbrella header "ZettaKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -44,6 +44,7 @@
     ZIKDevice *_device;
     ZIKDevice *_photocell;
     ZIKDevice *_led;
+    ZIKStream *_devices;
     
 }
 
@@ -61,8 +62,9 @@
     @weakify(self)
     [collected subscribeNext:^(id x) {
         @strongify(self)
+        NSLog(@"%@", x);
         [self._servers addObjectsFromArray:x];
-        
+        [self queryForDevices:(ZIKServer *)x[0]];
         //This is used to update UI from main thread.
         dispatch_async(dispatch_get_main_queue(), ^{
           [self.tableView reloadData];
@@ -71,23 +73,33 @@
     
 
     [root subscribeNext:^(ZIKRoot *x) {
-        _stream = [x multiplexWebsocketStream];
-        [_stream resume];
-        NSLog(@"%@", _stream);
-        [_stream.signal subscribeNext:^(ZIKMultiplexStreamEntry *x) {
-            NSLog(@"%@", x);
-        }];
-        while (1) {
-            if ([_stream isOpen]) {
-                [_stream subscribe:@"*"];
-                break;
-            }
-        }
+//        _stream = [x multiplexWebsocketStream];
+//        [_stream resume];
+//        NSLog(@"%@", _stream);
+//        [_stream.signal subscribeNext:^(ZIKMultiplexStreamEntry *x) {
+//            NSLog(@"%@", x);
+//        }];
+//        while (1) {
+//            if ([_stream isOpen]) {
+//                [_stream subscribe:@"*"];
+//                break;
+//            }
+//        }
     }];
     
 }
 
-
+- (void) queryForDevices:(ZIKServer *)server {
+    ZIKQuery *q = [ZIKQuery queryFromString:@"where type is not missing" fromServer:server];
+    [[ZIKSession sharedSession] queryDevices:q withResponseCompletion:^(NSError *error, ZIKQueryResponse *devices) {
+        _devices = [devices resultsStream];
+        [_devices.signal subscribeNext:^(id x) {
+            NSLog(@"ENTRY:%@", x);
+        }];
+        [_devices resume];
+    }];
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
