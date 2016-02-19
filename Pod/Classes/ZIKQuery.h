@@ -53,9 +53,34 @@
  @param query The base CAQL query used to filter devices.
  @param server The server to perform the query on.
  
- @return The newly-initialized `ZIKStreamEntry` object.
+ @return The newly-initialized `ZIKQuery` object.
  */
 + (instancetype) queryFromString:(NSString *)query fromServer:(ZIKServer *)server;
+
+/**
+ Initializes a `ZIKQuery` to find all devices with the specified `ZIKServer` object.
+ 
+ @param server The server to perform the query on.
+ 
+ @return The newly-initialized `ZIKQuery` object.
+ */
++ (instancetype) allDevicesFromServer:(ZIKServer *)server;
+
+/**
+ Initializes a `ZIKQuery` to find all devices on all servers.
+ 
+ @return The newly-initialized `ZIKQuery` object.
+ */
++ (instancetype) allDevicesFromAllServers;
+
+/**
+ Initializes a `ZIKQuery` with the specified query to run on all servers.
+ 
+ @param query The base CAQL query used to filter devices.
+ 
+ @return The newly-initialized `ZIKQuery` object.
+ */
++ (instancetype) queryFromStringOnAllServers:(NSString *)query;
 
 /**
  Initializes a `ZIKQuery` with the specified query and `ZIKServer` object.
@@ -63,7 +88,7 @@
  @param query The base CAQL query used to filter devices.
  @param server The server to perform the query on.
  
- @return The newly-initialized `ZIKStreamEntry` object.
+ @return The newly-initialized `ZIKQuery` object.
  */
 - (instancetype) initWithQuery:(NSString *)query andServer:(ZIKServer *)server;
 

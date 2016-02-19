@@ -223,16 +223,10 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     }];
 }
 
-- (void) queryDevices:(NSArray *)queries withCompletion:(DevicesCompletionBlock)block {
-    NSMutableArray *queryRequests = [[NSMutableArray alloc] init];
-    for (ZIKQuery *query in queries) {
-        RACSignal *sig = [self queryForDevices:query];
-        [queryRequests addObject:sig];
-    }
+- (void) queryDevices:(ZIKQuery *)query withCompletion:(DevicesCompletionBlock)block {
+    RACSignal *sig = [self queryForDevices:query];
     
-    RACSignal *merged = [[RACSignal merge:queryRequests] collect];
-    
-    [merged subscribeNext:^(id x) {
+    [sig subscribeNext:^(id x) {
         block(nil, x);
     }];
     
@@ -241,29 +235,20 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 - (void) queryDevices:(ZIKQuery *)query withResponseCompletion:(QueryResponseCompletionBlock)block {
     RACSignal *serverQueryResponse = [self queryRequest:query];
     RACSignal *deviceSignal = [[self devices:serverQueryResponse] collect];
-    NSLog(@"[%@, %@]", serverQueryResponse, deviceSignal);
     RACSignal *zipped = [RACSignal zip:@[serverQueryResponse, deviceSignal] reduce:^(ZIKQueryResponse *response, NSArray *devices){
-        NSLog(@"Zipped");
         response.devices = devices;
         return response;
     }];
     
     [zipped subscribeNext:^(ZIKQueryResponse *x) {
-        NSLog(@"DEVICES");
         block(nil, x);
     }];
     
 }
 
-- (RACSignal *) queryDevices:(NSArray *)queries {
-    NSMutableArray *queryRequests = [[NSMutableArray alloc] init];
-    for (ZIKQuery *query in queries) {
-        RACSignal *sig = [self queryRequest:query];
-        [queryRequests addObject:sig];
-    }
-    
-    RACSignal *merged = [RACSignal merge:queryRequests];
-    return merged;
+- (RACSignal *) queryDevices:(ZIKQuery *)queries {
+    RACSignal *serverQueryResponse = [self queryRequest:query];
+    return serverQueryResponse;
 }
 
 - (RACSignal *) getServerByName:(NSString *)name {
