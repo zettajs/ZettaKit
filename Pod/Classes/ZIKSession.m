@@ -246,7 +246,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     
 }
 
-- (RACSignal *) queryDevices:(ZIKQuery *)queries {
+- (RACSignal *) queryDevices:(ZIKQuery *)query {
     RACSignal *serverQueryResponse = [self queryRequest:query];
     return serverQueryResponse;
 }
