@@ -50,6 +50,8 @@
  */
 @property (nonatomic, retain, readonly) NSString *deviceState;
 
+
+@property (nonatomic, retain, readonly) NSDictionary *inputs;
 ///---------------------------
 /// @name Initialization
 ///---------------------------
