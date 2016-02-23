@@ -105,6 +105,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     }];
     
     RACSignal *queryResult = [queryAction map:^id(NSDictionary *value) {
+        
         NSString *href = value[@"href"];
         NSDictionary *data = @{@"ql": query.query, @"server": query.server.name};
         NSString *encodedParams = [ZIKUtil urlFormEncodeDictionary:data];
@@ -115,10 +116,15 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     RACSignal * flatQueryResults = [queryResult flatten];
     
     RACSignal *serverQueryResult = [flatQueryResults map:^id(NSDictionary *value) {
-        ZIKServer *server = [ZIKServer initWithDictionary:value];
+        ZIKQueryResponse *server = [ZIKQueryResponse initWithDictionary:value];
         return server;
     }];
     
+    return serverQueryResult;
+}
+
+- (RACSignal *) queryForDevices:(ZIKQuery *)query {
+    RACSignal *serverQueryResult = [self queryForDevices:query];
     RACSignal *devices = [self devices:serverQueryResult];
     
     return devices;
@@ -216,30 +222,32 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
     }];
 }
 
-- (void) queryDevices:(NSArray *)queries withCompletion:(DevicesCompletionBlock)block {
-    NSMutableArray *queryRequests = [[NSMutableArray alloc] init];
-    for (ZIKQuery *query in queries) {
-        RACSignal *sig = [self queryRequest:query];
-        [queryRequests addObject:sig];
-    }
+- (void) queryDevices:(ZIKQuery *)query withCompletion:(DevicesCompletionBlock)block {
+    RACSignal *sig = [self queryForDevices:query];
     
-    RACSignal *merged = [[RACSignal merge:queryRequests] collect];
-    
-    [merged subscribeNext:^(id x) {
+    [sig subscribeNext:^(id x) {
         block(nil, x);
     }];
     
 }
 
-- (RACSignal *) queryDevices:(NSArray *)queries {
-    NSMutableArray *queryRequests = [[NSMutableArray alloc] init];
-    for (ZIKQuery *query in queries) {
-        RACSignal *sig = [self queryRequest:query];
-        [queryRequests addObject:sig];
-    }
+- (void) queryDevices:(ZIKQuery *)query withResponseCompletion:(QueryResponseCompletionBlock)block {
+    RACSignal *serverQueryResponse = [self queryRequest:query];
+    RACSignal *deviceSignal = [[self devices:serverQueryResponse] collect];
+    RACSignal *zipped = [RACSignal zip:@[serverQueryResponse, deviceSignal] reduce:^(ZIKQueryResponse *response, NSArray *devices){
+        response.devices = devices;
+        return response;
+    }];
     
-    RACSignal *merged = [RACSignal merge:queryRequests];
-    return merged;
+    [zipped subscribeNext:^(ZIKQueryResponse *x) {
+        block(nil, x);
+    }];
+    
+}
+
+- (RACSignal *) queryDevices:(ZIKQuery *)query {
+    RACSignal *serverQueryResponse = [self queryRequest:query];
+    return serverQueryResponse;
 }
 
 - (RACSignal *) getServerByName:(NSString *)name {

@@ -39,6 +39,22 @@
     return [[ZIKQuery alloc] initWithQuery:query andServer:server];
 }
 
++ (instancetype) allDevicesFromServer:(ZIKServer *)server {
+    return [[ZIKQuery alloc] initWithQuery:@"where type is not none" andServer:server];
+}
+
++ (instancetype) allDevicesFromAllServers {
+    NSDictionary *data = @{@"properties": @{@"name": @"*"}, @"entities": @[], @"links": @[]};
+    ZIKServer *server = [ZIKServer initWithDictionary:data];
+    return [[ZIKQuery alloc] initWithQuery:@"where type is not none" andServer:server];
+}
+
++ (instancetype) queryFromStringOnAllServers:(NSString *)query {
+    NSDictionary *data = @{@"properties": @{@"name": @"*"}, @"entities": @[], @"links": @[]};
+    ZIKServer *server = [ZIKServer initWithDictionary:data];
+    return [[ZIKQuery alloc] initWithQuery:query andServer:server];
+}
+
 - (instancetype) initWithQuery:(NSString *)query andServer:(ZIKServer *)server {
     if (self = [super init]) {
         self.query = query;
