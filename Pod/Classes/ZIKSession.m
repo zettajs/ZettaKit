@@ -131,6 +131,7 @@ typedef void (^DeviceQueryCompletion)(int count, RACSignal *devicesObservable);
 }
 
 - (RACSignal *) root:(NSURL *)url {
+    self.apiEndpoint = url;
     RACSignal *rootResponse = [self get:url];
     
     RACSignal *root = [rootResponse map:^id(NSDictionary *value) {
