@@ -26,6 +26,7 @@
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ZIKQuery.h"
+#import "ZIKQueryResponse.h"
 #import "ispdy.h"
 
 /**
@@ -35,6 +36,7 @@
 
 typedef void (^ServerCompletionBlock)(NSError *error, ZIKServer *server);
 typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
+typedef void (^QueryResponseCompletionBlock)(NSError *error, ZIKQueryResponse *devices);
 
 /**
  The current endpoint the `ZIKSession` is targeting. All requests will be made against this endpoint unless specifically provided another URL.
@@ -99,9 +101,9 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
 /**
  Query devices from a Zetta HTTP API.
  
- @param queries An `NSArray` of `ZIKQuery` objects containing information on the devices that should be retrieved.
+ @param queries A `ZIKQuery` object containing information on the devices that should be retrieved.
  
- @return An RACSignal object that can be subscribed to and operated on. This RACSignal will produce `ZIKDevice` objects.
+ @return An RACSignal object that can be subscribed to and operated on. This RACSignal will produce a `ZIKQueryResponse` object.
  */
 - (RACSignal *) queryDevices:(NSArray *)queries;
 
@@ -125,10 +127,18 @@ typedef void (^DevicesCompletionBlock)(NSError *error, NSArray *devices);
 /**
  Query devices from a Zetta HTTP API.
  
- @param queries An `NSArray` of `ZIKQuery` objects containing information on the devices that should be retrieved.
+ @param query A `ZIKQuery` object containing information on the devices that should be retrieved.
  @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and an `NSArray` of `ZIKDevice` objects that fullfil the query.
  */
-- (void) queryDevices:(NSArray *)queries withCompletion:(DevicesCompletionBlock)block;
+- (void) queryDevices:(ZIKQuery *)query withCompletion:(DevicesCompletionBlock)block;
+
+/**
+ Query devices from a Zetta HTTP API.
+ 
+ @param query A `ZIKQuery` object containing information on the devices that should be retrieved.
+ @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and a `ZIKQueryResponse` object that has the immediate results of the query, and a method to stream devices that fulfill the query afterward.
+ */
+- (void) queryDevices:(ZIKQuery *)query withResponseCompletion:(QueryResponseCompletionBlock)block;
 
 /**
  Start an HTTP task over the Zetta API, and receive an observable for it.

@@ -1,12 +1,15 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-target 'ZettaKit', :exclusive => true do
+use_frameworks!
+platform :ios, '9.0'
+
+target 'ZettaKit' do
   pod "ZettaKit", :path => "../"
-  pod 'ReactiveCocoa', '2.4.7'
+  pod 'ReactiveCocoa', '4.0'
   pod 'SocketRocket', '0.4'
 end
 
-target 'Tests', :exclusive => true do
+target 'Tests' do
   pod "ZettaKit", :path => "../"
   pod 'Specta'
   pod 'Expecta'

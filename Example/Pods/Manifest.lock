@@ -1,21 +1,26 @@
 PODS:
   - Expecta (1.0.5)
-  - ReactiveCocoa (2.4.7):
-    - ReactiveCocoa/UI (= 2.4.7)
-  - ReactiveCocoa/Core (2.4.7):
+  - ReactiveCocoa (4.0.0):
+    - ReactiveCocoa/UI (= 4.0.0)
+    - Result (~> 1.0.1)
+  - ReactiveCocoa/Core (4.0.0):
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/no-arc (2.4.7)
-  - ReactiveCocoa/UI (2.4.7):
+    - Result (~> 1.0.1)
+  - ReactiveCocoa/no-arc (4.0.0):
+    - Result (~> 1.0.1)
+  - ReactiveCocoa/UI (4.0.0):
     - ReactiveCocoa/Core
+    - Result (~> 1.0.1)
+  - Result (1.0.2)
   - SocketRocket (0.4)
   - Specta (1.0.5)
-  - ZettaKit (0.0.3):
-    - ReactiveCocoa (= 2.4.7)
+  - ZettaKit (0.0.4):
+    - ReactiveCocoa (= 4.0)
     - SocketRocket (= 0.4)
 
 DEPENDENCIES:
   - Expecta
-  - ReactiveCocoa (= 2.4.7)
+  - ReactiveCocoa (= 4.0)
   - SocketRocket (= 0.4)
   - Specta
   - ZettaKit (from `../`)
@@ -26,9 +31,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
-  ReactiveCocoa: eb38dee0a0e698f73a9b25e5c1faea2bb4c79240
+  ReactiveCocoa: 69be555be30674b07a86b60a91b855063841acc0
+  Result: dd3dd71af3fa2e262f1a999e14fba2c25ec14f16
   SocketRocket: 01443933b7bc362621325f4607b80b4286a99707
   Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
-  ZettaKit: ac005b329f18743ec897d8ef251594fe23888115
+  ZettaKit: fde1365b8a33b0ef8a9131f4630fde6f7968b440
 
-COCOAPODS: 0.38.2
+PODFILE CHECKSUM: 474f0d832a6f82184f41784838853e52b6cd893f
+
+COCOAPODS: 1.0.0.beta.3
