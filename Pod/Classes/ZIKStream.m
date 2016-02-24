@@ -33,6 +33,7 @@
 #import "ZIKSpdyDelegate.h"
 #import "ZIKPubSubBroker.h"
 #import "ZIKMultiplexStreamEntry.h"
+#import "ZIKDevice.h"
 #import "ispdy.h"
 
 @interface ZIKStream () <SRWebSocketDelegate>
@@ -42,6 +43,7 @@
 @property (nonatomic, retain) id<RACSubscriber> subscriber;
 @property (nonatomic) BOOL flowing;
 @property (nonatomic, retain, readwrite) NSString *title;
+@property (nonatomic, retain, readwrite) NSArray *rel;
 @property (nonatomic, retain, readwrite) RACSignal *signal;
 @property (nonatomic, readwrite) BOOL multiplexed;
 
@@ -93,6 +95,10 @@
                 }];
             }
         }
+        
+        if ([data objectForKey:@"rel"]) {
+            self.rel = data[@"rel"];
+        }
     }
     return self;
 }
@@ -106,6 +112,7 @@
         self.multiplexed = multiplexed;
         self.title = link.title;
         self.url = link.href;
+        self.rel = link.rel;
         self.flowing = NO;
         NSURL *streamUrl = [NSURL URLWithString:self.url];
         ZIKSession *session = [ZIKSession sharedSession];
@@ -182,6 +189,8 @@
         } else {
             if ([self.title isEqualToString:@"logs"]) {
                 [self.subscriber sendNext:[ZIKLogStreamEntry initWithDictionary:data]];
+            } else if ([self.rel containsObject:@"http://rels.zettajs.io/query"]) {
+                [self.subscriber sendNext:[ZIKDevice initWithDictionary:data]];
             } else {
                 [self.subscriber sendNext:[ZIKStreamEntry initWithDictionary:data]];
             }

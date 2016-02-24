@@ -50,6 +50,11 @@
  */
 @property (nonatomic, retain, readonly) NSString *deviceState;
 
+/**
+ The inputs to the transition.
+ */
+@property (nonatomic, retain, readonly) NSDictionary *inputs;
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------
