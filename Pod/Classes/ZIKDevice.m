@@ -193,15 +193,15 @@
     NSArray *filteredLinks = [self.links filteredArrayUsingPredicate:pred];
     ZIKLink *selfLink = filteredLinks[0];
     NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:selfLink.href]];
-    return [[ZIKSession sharedSession] taskForRequest:req];
+    RACSignal *fetchSignal = [[ZIKSession sharedSession] taskForRequest:req];
+    return [fetchSignal map:^id(NSDictionary *value) {
+        return [ZIKDevice initWithDictionary:value];
+    }];
 }
 
 -(void)fetchWithCompletion:(CompletionBlock _Nonnull)block {
     RACSignal *fetchSignal = [self fetch];
-    RACSignal *deviceMap = [fetchSignal map:^id(NSDictionary *value) {
-        return [ZIKDevice initWithDictionary:value];
-    }];
-    RACSignal *singleDevice = [deviceMap take:1];
+    RACSignal *singleDevice = [fetchSignal take:1];
     
     [singleDevice subscribeNext:^(id x) {
         block(nil, x);

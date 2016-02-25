@@ -61,16 +61,16 @@
     NSArray *filteredLinks = [self.links filteredArrayUsingPredicate:pred];
     ZIKLink *selfLink = filteredLinks[0];
     NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:selfLink.href]];
-    return [[ZIKSession sharedSession] taskForRequest:req];
+    RACSignal *fetchSignal = [[ZIKSession sharedSession] taskForRequest:req];
+    return [fetchSignal map:^id(NSDictionary *value) {
+        return [ZIKServer initWithDictionary:value];
+    }];
 }
 
 - (void) fetchWithCompletion:(ServerCompletionBlock)block {
     RACSignal *fetchSignal = [self fetch];
-    RACSignal *serverMap = [fetchSignal map:^id(NSDictionary *value) {
-        return [ZIKServer initWithDictionary:value];
-    }];
     
-    RACSignal *singleServer = [serverMap take:1];
+    RACSignal *singleServer = [fetchSignal take:1];
     
     [singleServer subscribeNext:^(id x) {
         block(nil, x);
