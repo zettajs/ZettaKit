@@ -129,6 +129,7 @@
         
         [self.device transition:self.transition.name withArguments:dict andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"Error: %@", err);
                 self.device = device;
                 [self transitionBack];
                 
@@ -137,6 +138,7 @@
     } else {
         [self.device transition:self.transition.name andCompletion:^(NSError *err, ZIKDevice *device) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"Error: %@", err);
                 self.device = device;
                 [self transitionBack];
             });

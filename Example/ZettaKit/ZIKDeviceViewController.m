@@ -122,6 +122,7 @@
             vc.transition = nil;
             NSArray *keys = [self.device.properties allKeys];
             vc.stream = [self.device stream:keys[path.row]];
+
         }
         // Pass any objects to the view controller here, like...
     }

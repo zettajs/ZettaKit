@@ -9,6 +9,7 @@
 #import "ZIKServer.h"
 #import "ZIKLink.h"
 #import "ZIKDevice.h"
+#import "ZIKSession.h"
 
 @interface ZIKServer ()
 
@@ -53,6 +54,29 @@
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<ZIKServer: %@>", self.name];
+}
+
+- (RACSignal *) fetch {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTIANS %@", @"self"];
+    NSArray *filteredLinks = [self.links filteredArrayUsingPredicate:pred];
+    ZIKLink *selfLink = filteredLinks[0];
+    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:selfLink.href]];
+    RACSignal *fetchSignal = [[ZIKSession sharedSession] taskForRequest:req];
+    return [fetchSignal map:^id(NSDictionary *value) {
+        return [ZIKServer initWithDictionary:value];
+    }];
+}
+
+- (void) fetchWithCompletion:(ServerCompletionBlock)block {
+    RACSignal *fetchSignal = [self fetch];
+    
+    RACSignal *singleServer = [fetchSignal take:1];
+    
+    [singleServer subscribeNext:^(id x) {
+        block(nil, x);
+    } error:^(NSError *error) {
+        block(error, nil);
+    }];
 }
 
 @end

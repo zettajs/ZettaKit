@@ -153,6 +153,20 @@ typedef void (^CompletionBlock)(NSError * _Nullable err, ZIKDevice * _Nullable d
  
  @return An NSArray of ZIKStream instances that correspond to every stream on the device representation.
  */
-- (NSArray * _Nonnull)streams;
+- (NSArray * _Nonnull)getAllStreams;
+
+/**
+ Fetch the current representation of the `ZIKDevice`.
+ 
+ @return An RACSignal object that can be subscribed to and operated on using ReactiveCocoa extensions.
+ */
+-(RACSignal * _Nonnull)fetch;
+
+/**
+ Fetch the current representation of the `ZIKDevice`.
+ 
+ @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and the `ZIKDevice` object representing the server.
+ */
+-(void)fetchWithCompletion:(CompletionBlock _Nonnull)block;
 
 @end
