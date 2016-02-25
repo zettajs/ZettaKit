@@ -153,6 +153,10 @@ typedef void (^CompletionBlock)(NSError * _Nullable err, ZIKDevice * _Nullable d
  
  @return An NSArray of ZIKStream instances that correspond to every stream on the device representation.
  */
-- (NSArray * _Nonnull)streams;
+- (NSArray * _Nonnull)getAllStreams;
+
+-(RACSignal * _Nonnull)fetch;
+
+-(void)fetchWithCompletion:(CompletionBlock _Nonnull)block;
 
 @end

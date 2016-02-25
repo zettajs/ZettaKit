@@ -24,12 +24,15 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
 
 /**
  The `ZIKServer` class abstracts away the Zetta server resource.
  */
 
 @interface ZIKServer : NSObject
+typedef void (^ServerCompletionBlock)(NSError * _Nullable err, ZIKServer * _Nullable device);
 
 /**
  The devices that currently belong to the server. An `NSArray` of `ZIKDevice` objects.
@@ -69,5 +72,9 @@
  @return The newly-initialized `ZIKServer` object.
  */
 - (instancetype) initWithDictionary:(NSDictionary *)data;
+
+- (RACSignal * _Nonnull) fetch;
+
+- (void) fetchWithCompletion:(ServerCompletionBlock)block;
 
 @end

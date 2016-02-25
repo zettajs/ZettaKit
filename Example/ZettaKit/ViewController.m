@@ -70,20 +70,20 @@
     }];
     
 
-    [root subscribeNext:^(ZIKRoot *x) {
-        _stream = [x multiplexWebsocketStream];
-        [_stream resume];
-        NSLog(@"%@", _stream);
-        [_stream.signal subscribeNext:^(ZIKMultiplexStreamEntry *x) {
-            NSLog(@"%@", x);
-        }];
-        while (1) {
-            if ([_stream isOpen]) {
-                [_stream subscribe:@"*"];
-                break;
-            }
-        }
-    }];
+//    [root subscribeNext:^(ZIKRoot *x) {
+//        _stream = [x multiplexWebsocketStream];
+//        [_stream resume];
+//        NSLog(@"%@", _stream);
+//        [_stream.signal subscribeNext:^(ZIKMultiplexStreamEntry *x) {
+//            NSLog(@"%@", x);
+//        }];
+//        while (1) {
+//            if ([_stream isOpen]) {
+//                [_stream subscribe:@"*"];
+//                break;
+//            }
+//        }
+//    }];
     
 }
 

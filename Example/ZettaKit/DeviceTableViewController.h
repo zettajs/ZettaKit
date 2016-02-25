@@ -26,9 +26,11 @@
 
 #import <UIKit/UIKit.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "ZIKServer.h"
 
 @interface DeviceTableViewController : UITableViewController
 
 @property (nonatomic, retain) RACSignal *serverSignal;
+@property (nonatomic, retain) ZIKServer *server;
 
 @end

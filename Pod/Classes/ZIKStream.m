@@ -75,6 +75,7 @@
         }
         
         if ([data objectForKey:@"href"]) {
+            //self.href = data[@"href"];
             self.url = data[@"href"];
             self.flowing = NO;
             NSURL *streamUrl = [NSURL URLWithString:self.url];

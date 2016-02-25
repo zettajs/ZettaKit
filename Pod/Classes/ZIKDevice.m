@@ -69,6 +69,7 @@
     NSArray *filteredStreams = [self.streams filteredArrayUsingPredicate:pred];
     if ([filteredStreams count] != 0) {
         ZIKLink *entry = filteredStreams[0];
+        
         return [ZIKStream initWithLink:entry];
     } else {
         return nil;
@@ -173,7 +174,7 @@
     
 }
 
-- (NSArray *)streams {
+- (NSArray *)getAllStreams {
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTAINS %@", @"monitor"];
     NSArray *filteredStreams = [self.links filteredArrayUsingPredicate:pred];
     NSMutableArray *streams = [[NSMutableArray alloc] init];
@@ -186,5 +187,28 @@
     }
     return streams;
 }
+
+-(RACSignal * _Nonnull)fetch {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rel CONTIANS %@", @"self"];
+    NSArray *filteredLinks = [self.links filteredArrayUsingPredicate:pred];
+    ZIKLink *selfLink = filteredLinks[0];
+    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:selfLink.href]];
+    return [[ZIKSession sharedSession] taskForRequest:req];
+}
+
+-(void)fetchWithCompletion:(CompletionBlock _Nonnull)block {
+    RACSignal *fetchSignal = [self fetch];
+    RACSignal *deviceMap = [fetchSignal map:^id(NSDictionary *value) {
+        return [ZIKDevice initWithDictionary:value];
+    }];
+    RACSignal *singleDevice = [deviceMap take:1];
+    
+    [singleDevice subscribeNext:^(id x) {
+        block(nil, x);
+    } error:^(NSError *error) {
+        block(error, nil);
+    }];
+}
+
 
 @end

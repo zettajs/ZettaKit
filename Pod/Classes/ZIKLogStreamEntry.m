@@ -25,6 +25,7 @@
 
 
 #import "ZIKLogStreamEntry.h"
+#import "ZIKTransition.h"
 
 @interface ZIKLogStreamEntry ()
 
@@ -32,7 +33,8 @@
 @property (nonatomic, retain, readwrite) NSNumber *timestamp;
 @property (nonatomic, retain, readwrite) NSString *transition;
 @property (nonatomic, retain, readwrite) NSString *deviceState;
-@property (nonatomic, retain, readwrite) NSDictionary *inputs;
+@property (nonatomic, retain, readwrite) NSDictionary *input;
+@property (nonatomic, retain, readwrite) NSArray *actions;
 
 @end
 
@@ -46,10 +48,21 @@
         self.deviceState = properties[@"state"];
         self.transition = data[@"transition"];
         
-        if(data[@"inputs"]) {
-            self.inputs = data[@"inputs"];
+        if(![[data objectForKey:@"input"] isEqual:[NSNull null]]) {
+            self.input = data[@"input"];
         } else {
-            self.inputs = @{};
+            self.input = @{};
+        }
+        
+        if (![[data objectForKey:@"actions"] isEqual:[NSNull null]]) {
+            NSMutableArray *transitions = [[NSMutableArray alloc] init];
+            for (NSDictionary *actionData in data[@"actions"]) {
+                ZIKTransition *trans = [ZIKTransition initWithDictionary:actionData];
+                [transitions addObject:trans];
+            }
+            self.actions = [NSArray arrayWithArray:transitions];
+        } else {
+            self.actions = @[];
         }
     }
     return self;
