@@ -62,7 +62,7 @@ typedef void (^ServerCompletionBlock)(NSError * _Nullable err, ZIKServer * _Null
  
  @return The newly-initialized `ZIKServer` object.
  */
-+ (instancetype) initWithDictionary:(NSDictionary *)data;
++ (instancetype _Nonnull) initWithDictionary:(NSDictionary *)data;
 
 /**
  Initializes a `ZIKServer` with the specified siren document in `NSDictionary` form.
@@ -71,10 +71,20 @@ typedef void (^ServerCompletionBlock)(NSError * _Nullable err, ZIKServer * _Null
  
  @return The newly-initialized `ZIKServer` object.
  */
-- (instancetype) initWithDictionary:(NSDictionary *)data;
+- (instancetype _Nonnull) initWithDictionary:(NSDictionary *)data;
 
+/**
+ Fetch the current representation of the `ZIKServer`.
+ 
+ @return An RACSignal object that can be subscribed to and operated on using ReactiveCocoa extensions.
+ */
 - (RACSignal * _Nonnull) fetch;
 
+/**
+ Fetch the current representation of the `ZIKServer`.
+ 
+ @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and the `ZIKServer` object representing the server.
+ */
 - (void) fetchWithCompletion:(ServerCompletionBlock)block;
 
 @end
