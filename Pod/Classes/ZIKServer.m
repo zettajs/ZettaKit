@@ -17,6 +17,7 @@
 @property (nonatomic, retain, readwrite) NSArray *devices;
 @property (nonatomic, retain, readwrite) NSString *name;
 @property (nonatomic, retain, readwrite) NSArray *links;
+@property (nonatomic, retain, readwrite) NSDictionary *properties;
 
 @end
 
@@ -30,6 +31,7 @@
     if (self = [super init]) {
         if([data objectForKey:@"properties"] != nil) {
             NSDictionary *properties = data[@"properties"];
+            self.properties = properties;
             if([properties objectForKey:@"name"]) {
                 self.name = properties[@"name"];
             }
