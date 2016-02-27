@@ -33,7 +33,7 @@
 @property (nonatomic, retain, readwrite) NSNumber *timestamp;
 @property (nonatomic, retain, readwrite) NSString *transition;
 @property (nonatomic, retain, readwrite) NSString *deviceState;
-@property (nonatomic, retain, readwrite) NSDictionary *input;
+@property (nonatomic, retain, readwrite) NSArray *inputs;
 @property (nonatomic, retain, readwrite) NSArray *actions;
 
 @end
@@ -49,9 +49,9 @@
         self.transition = data[@"transition"];
         
         if(![[data objectForKey:@"input"] isEqual:[NSNull null]]) {
-            self.input = data[@"input"];
+            self.inputs = data[@"input"];
         } else {
-            self.input = @{};
+            self.inputs = @[];
         }
         
         if (![[data objectForKey:@"actions"] isEqual:[NSNull null]]) {
