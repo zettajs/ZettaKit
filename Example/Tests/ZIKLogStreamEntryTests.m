@@ -22,7 +22,7 @@ describe(@"ZIKLogStreamEntry", ^{
     it(@"Initializes inputs and actions properly when they are present", ^{
         ZIKLogStreamEntry *entry = [ZIKLogStreamEntry initWithDictionary:data];
         expect(entry.actions.count).to.equal(1);
-        expect(entry.input.count).to.equal(2);
+        expect(entry.inputs.count).to.equal(2);
         ZIKTransition *transition = entry.actions[0];
         expect(transition.name).to.equal(@"input");
     });
@@ -30,13 +30,13 @@ describe(@"ZIKLogStreamEntry", ^{
     it(@"Initializes inputs and actions properly when actions are empty", ^{
         ZIKLogStreamEntry *entry = [ZIKLogStreamEntry initWithDictionary:data2];
         expect(entry.actions.count).to.equal(0);
-        expect(entry.input.count).to.equal(2);
+        expect(entry.inputs.count).to.equal(2);
     });
     
     it(@"Initializes inputs and actions properly when actions and input are not present", ^{
         ZIKLogStreamEntry *entry = [ZIKLogStreamEntry initWithDictionary:data3];
         expect(entry.actions.count).to.equal(0);
-        expect(entry.input.count).to.equal(0);
+        expect(entry.inputs.count).to.equal(0);
     });
     
 });

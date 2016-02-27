@@ -53,7 +53,7 @@
 /**
  The inputs to the transition.
  */
-@property (nonatomic, retain, readonly) NSDictionary *input;
+@property (nonatomic, retain, readonly) NSArray *inputs;
 
 /**
  The new available actions for the device.
