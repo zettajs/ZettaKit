@@ -49,6 +49,8 @@ typedef void (^ServerCompletionBlock)(NSError * _Nullable err, ZIKServer * _Null
  */
 @property (nonatomic, retain, readonly) NSArray *links;
 
+@property (nonatomic, retain, readonly) NSDictionary *properties;
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------
