@@ -40,6 +40,7 @@ NSArray *actions = @[@{
 NSDictionary *actuator = @{@"properties": properties, @"links": links, @"actions": actions};
 NSDictionary *sensor = @{@"actions": @[], @"links": links, @"properties": sensorProperties};
 
+NSDictionary *entry = @{@"topic":@"input/205c8651-2793-4e97-94a9-ce0eb61e2cb3/logs",@"timestamp":@1456430816996,@"transition":@"input",@"input":@[@{@"name":@"t1",@"value":@"1"},@{@"name":@"t2",@"value":@"2"}],@"properties":@{@"id":@"205c8651-2793-4e97-94a9-ce0eb61e2cb3",@"type":@"input",@"state":@"on"},@"actions":@[@{@"class":@[@"transition"],@"name":@"input",@"method":@"POST",@"href":@"http://localhost:1338/servers/cloud/devices/205c8651-2793-4e97-94a9-ce0eb61e2cb3",@"fields":@[@{@"type":@"text",@"name":@"t1"},@{@"type":@"text",@"name":@"t2"},@{@"name":@"action",@"type":@"hidden",@"value":@"input"}]}]};
 
 describe(@"ZIKDevice", ^{
     describe(@"Initialization", ^{
@@ -76,6 +77,15 @@ describe(@"ZIKDevice", ^{
             NSArray *streams = [device getAllStreams];
             expect([streams count]).to.equal(2);
         });
+    });
+    
+    it(@"ZIKDevice refresh with a log entry.", ^{
+        ZIKDevice *device = [ZIKDevice initWithDictionary:actuator];
+        ZIKLogStreamEntry *deviceEntry = [ZIKLogStreamEntry initWithDictionary:entry];
+        [device refreshWithLogEntry:deviceEntry];
+        expect(device.transitions.count).to.equal(1);
+        expect(device.properties[@"type"]).to.equal(@"input");
+        expect(device.state).to.equal(@"on");
     });
 });
 

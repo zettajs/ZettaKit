@@ -36,6 +36,7 @@
         [self generateUI];
     } else if(self.stream != nil) {
         self.navigationItem.title = self.stream.title;
+        self.stream.pingWhileOpen = YES;
         [self.stream.signal subscribeNext:^(ZIKStreamEntry *x) {
             NSString *timestampEntry = [NSString stringWithFormat:@"%@", x.timestamp];
             NSString *valueEntry = [NSString stringWithFormat:@"%@", x.data];

@@ -60,6 +60,12 @@
  */
 @property (nonatomic, retain, readonly) NSArray *actions;
 
+/**
+ The new properties for the device.
+ */
+@property (nonatomic, retain, readonly) NSDictionary *properties;
+
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------

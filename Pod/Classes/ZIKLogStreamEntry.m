@@ -35,6 +35,7 @@
 @property (nonatomic, retain, readwrite) NSString *deviceState;
 @property (nonatomic, retain, readwrite) NSArray *inputs;
 @property (nonatomic, retain, readwrite) NSArray *actions;
+@property (nonatomic, retain, readwrite) NSDictionary *properties;
 
 @end
 
@@ -47,6 +48,7 @@
         NSDictionary *properties = data[@"properties"];
         self.deviceState = properties[@"state"];
         self.transition = data[@"transition"];
+        self.properties = properties;
         
         if(![[data objectForKey:@"input"] isEqual:[NSNull null]]) {
             self.inputs = data[@"input"];

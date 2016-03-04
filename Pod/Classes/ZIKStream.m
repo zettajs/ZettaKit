@@ -46,6 +46,7 @@
 @property (nonatomic, retain, readwrite) NSArray *rel;
 @property (nonatomic, retain, readwrite) RACSignal *signal;
 @property (nonatomic, readwrite) BOOL multiplexed;
+@property (nonatomic, readwrite) NSTimer *timer;
 
 @end
 
@@ -67,6 +68,7 @@
 - (instancetype) initWithDictionary:(NSDictionary *)data andIsMultiplex:(BOOL)multiplexed {
     if (self = [super init]) {
         self.multiplexed = multiplexed;
+        self.pingWhileOpen = YES;
         if(self.multiplexed == YES) {
             _subscriptions = [[NSMutableDictionary alloc] init];
         }
@@ -111,6 +113,7 @@
 - (instancetype) initWithLink:(ZIKLink *)link andIsMultiplex:(BOOL)multiplexed {
     if (self = [super init]) {
         self.multiplexed = multiplexed;
+        self.pingWhileOpen = YES;
         self.title = link.title;
         self.url = link.href;
         self.rel = link.rel;
@@ -157,6 +160,9 @@
         self.flowing = YES;
     } else {
         [_socket open];
+        if (self.pingWhileOpen) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(ping) userInfo:nil repeats:YES];
+        }
     }
 }
 
@@ -219,6 +225,11 @@
         self.flowing = NO;
     } else {
         [_socket close];
+        if (self.pingWhileOpen) {
+            //clear timer
+            [self.timer invalidate];
+            self.timer = nil;
+        }
     }
 }
 
@@ -275,6 +286,10 @@
 
 - (BOOL) isOpen {
     return _socket.readyState == SR_OPEN;
+}
+
+- (void) ping {
+    [_socket sendPing:[NSData data]];
 }
 
 @end

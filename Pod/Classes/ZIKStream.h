@@ -48,6 +48,10 @@
  */
 @property (nonatomic, readonly) BOOL multiplexed;
 
+/**
+ */
+@property (nonatomic, readwrite) BOOL pingWhileOpen;
+
 ///---------------------------
 /// @name Initialization
 ///---------------------------
@@ -161,5 +165,6 @@
 - (void) unsubscribe:(NSString *)topic;
 
 
+- (void) ping;
 
 @end

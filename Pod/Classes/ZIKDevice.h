@@ -26,6 +26,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZIKStream.h"
+#import "ZIKLogStreamEntry.h"
 
 /**
  `ZIKDevice` represents a device within the Zetta API. It's used for storing device data, interacting with streaming data from the API, and calling transitions over HTTP.
@@ -168,5 +169,12 @@ typedef void (^CompletionBlock)(NSError * _Nullable err, ZIKDevice * _Nullable d
  @param block A block object that will be called when the HTTP transaction completes. This block has no return value and has two arguments: The potential error from the HTTP transaction, and the `ZIKDevice` object representing the server.
  */
 -(void)fetchWithCompletion:(CompletionBlock _Nonnull)block;
+
+/**
+ Update the device with a `ZIKLogStreamEntry`.
+ 
+ @param A `ZIKLoadStreamEntry` instance for the corresponding device.
+ */
+-(void)refreshWithLogEntry:(ZIKLogStreamEntry * _Nonnull)entry;
 
 @end
