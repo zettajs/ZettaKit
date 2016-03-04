@@ -29,6 +29,7 @@
 #import "ZIKLink.h"
 #import "ZIKTransition.h"
 #import "ZIKSession.h"
+#import "ZIKLogStreamEntry.h"
 
 @interface ZIKDevice ()
 
@@ -210,5 +211,23 @@
     }];
 }
 
+-(void)refreshWithLogEntry:(ZIKLogStreamEntry *)entry {
+    self.properties = entry.properties;
+    self.transitions = entry.actions;
+    self.type = self.properties[@"type"];
+    self.uuid = self.properties[@"id"];
+    if (self.properties[@"name"] != nil && self.properties[@"name"] != [NSNull null]) {
+        self.name = self.properties[@"name"];
+    } else {
+        self.name = nil;
+    }
+    
+    if (self.properties[@"state"] != nil) {
+        self.state = self.properties[@"state"];
+    } else {
+        self.state = nil;
+    }
+
+}
 
 @end
